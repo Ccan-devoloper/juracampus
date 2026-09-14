@@ -13,6 +13,7 @@ import { MICROCASES, KLAUSUREN } from "../src/data/fallklassen.js";
 import { LAENDER, WIDERSPRUCH_STAND } from "../src/data/laender.js";
 import { BAEUME, ZEITACHSEN, LANDKARTEN } from "../src/data/visualisierungen.js";
 import { VERWECHSLUNGEN } from "../src/data/verwechslungen.js";
+import { PROTOKOLL, ART_LABEL } from "../src/data/protokoll.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -65,6 +66,17 @@ for (const b of STREITBILDER) {
   if (typeof b.herrschend !== "number" || !b.ansichten[b.herrschend]) warn(`Streitbild „${b.id}“: herrschende Ansicht nicht bestimmt`);
 }
 console.log(`Streitbilder: ${STREITBILDER.length} von ${probleme.probleme.length} Streitständen ausgearbeitet (${Math.round((STREITBILDER.length / probleme.probleme.length) * 100)} %)`);
+
+/* Änderungsprotokoll: Ohne Protokoll ist „Stand 2026" eine Behauptung ohne Beleg. */
+let letztes = "9999-99-99";
+for (const p of PROTOKOLL) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(p.datum)) warn(`Protokolleintrag „${p.titel}“: kein gültiges Datum`);
+  if (p.datum > letztes) warn(`Protokolleintrag „${p.titel}“: steht nicht in absteigender Reihenfolge`);
+  letztes = p.datum;
+  if (!ART_LABEL[p.art]) warn(`Protokolleintrag „${p.titel}“: unbekannte Art „${p.art}“`);
+  if (!p.text || p.text.length < 60) warn(`Protokolleintrag „${p.titel}“: Text fehlt oder ist zu kurz`);
+}
+console.log(`Änderungsprotokoll: ${PROTOKOLL.length} Einträge, jüngster vom ${PROTOKOLL[0].datum}`);
 
 /* Visualisierungen: jeder Baum muss in Blättern enden, jedes Blatt eine Norm nennen. */
 function blaetter(k, id, tiefe = 0) {

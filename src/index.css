@@ -1066,6 +1066,39 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
   .zuordnung { grid-template-columns: 1fr; }
 }
 
+/* ------------------------------------------------ Methodik und Protokoll */
+.zahlenband { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 2px; background: var(--linie); border-radius: var(--rund); overflow: hidden; }
+.zahlenband > div { background: var(--papier); padding: 16px 14px; text-align: center; }
+.zahlenband strong { display: block; font-family: var(--display); font-size: 28px; color: var(--marke-text); line-height: 1.1; }
+.zahlenband span { font-size: 11.5px; color: var(--ink-weich); line-height: 1.35; display: block; margin-top: 4px; }
+
+.panel--gruen { border-left: 4px solid var(--gruen); }
+.panel--rot { border-left: 4px solid var(--rot); }
+.pruefliste { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.pruefliste li { font-size: 13.5px; line-height: 1.6; padding-left: 20px; position: relative; color: var(--ink-weich); }
+.pruefliste li::before { content: "✓"; position: absolute; left: 0; color: var(--gruen); font-weight: 700; }
+.pruefliste--offen li::before { content: "–"; color: var(--rot); }
+
+.methodenblock h3 { font-family: var(--serif); font-size: 15.5px; margin: 0 0 6px; }
+.methodenblock p { margin: 0; font-size: 13.5px; color: var(--ink-weich); line-height: 1.65; }
+
+.protokoll { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; background: var(--linie); border-radius: var(--rund); overflow: hidden; }
+.protokolleintrag { display: grid; grid-template-columns: 150px 1fr; gap: 18px; background: var(--papier); padding: 15px 18px; border-left: 3px solid transparent; }
+.protokolleintrag--inhalt { border-left-color: var(--marke); }
+.protokolleintrag--methode { border-left-color: var(--lila); }
+.protokolleintrag--technik { border-left-color: var(--gruen); }
+.protokolleintrag--korrektur { border-left-color: var(--rot); }
+.protokolleintrag__meta { display: grid; gap: 6px; align-content: start; }
+.protokolleintrag time { font-family: var(--mono); font-size: 12px; color: var(--ink-weich); }
+.protokolleintrag strong { display: block; font-family: var(--serif); font-size: 15.5px; margin-bottom: 4px; }
+.protokolleintrag p { margin: 0; font-size: 13.5px; color: var(--ink-weich); line-height: 1.6; }
+.protokolleintrag em { display: inline-block; margin-top: 7px; font-family: var(--mono); font-size: 11.5px; font-style: normal; color: var(--marke-text); }
+
+@media (max-width: 760px) {
+  .protokolleintrag { grid-template-columns: 1fr; gap: 8px; }
+  .protokolleintrag__meta { display: flex; gap: 10px; align-items: center; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

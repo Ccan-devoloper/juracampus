@@ -67,6 +67,13 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
   Zahlen und Normen, Hinweise im Lehrbuch), **Volltextsuche** über alle Bände.
 - **Motivation**: Tagesziel, Streak, Kompetenzstufe, Erfahrungspunkte; Cockpit mit „Heute dran“
   und den fünf Kompetenzen mit dem größten Hebel.
+- **Methodik und Änderungsprotokoll**: eine Seite, die sagt, was bei jedem Build geprüft wird
+  und was ausdrücklich nicht – und ein Protokoll, das jede Änderung mit Datum, Art und Umfang
+  ausweist. Ohne Protokoll wäre „Stand 2026“ eine Behauptung ohne Beleg.
+- **Auffindbarkeit**: Der Build erzeugt zusätzlich 127 eigenständige HTML-Seiten unter `s/` –
+  jede Erklärung, jeder ausgearbeitete Streitstand, jede Landesrechtsübersicht mit vollständigem
+  Text, ohne JavaScript lesbar, mit `schema.org/LearningResource`, Canonical und Open Graph.
+  Dazu `sitemap.xml` und `robots.txt`. Keine leeren Doorway-Seiten: derselbe Inhalt wie in der App.
 - Dunkelmodus, Mobil-Navigation, Tastaturkürzel (`/` Suche, `Alt+←/→`, Leertaste und `1 2 3`
   in der Kartensitzung), PWA-Manifest, Export/Import des Lernstands.
 
@@ -95,6 +102,7 @@ tools/
   umlaute.mjs           ae/oe/ue → ä/ö/ü, geprüfte ß-Liste (mit Selbsttest)
   normen.mjs            Erkennung von Normzitaten, Einzelnormen, Gesetzeskürzel
   pruefen.mjs           Konsistenzprüfung
+  auffindbar.mjs        statische Einzelseiten, sitemap.xml, robots.txt (läuft in `npm run build`)
   kompetenz-check.mjs   Abdeckung des Kompetenzmodells: welcher Inhalt landet in welchem Knoten
 src/
   App.jsx               Shell: Kopfleiste, Rechtsgebiete, Examensstufe, Rail, Routing
@@ -104,7 +112,7 @@ src/
                         sitzung (adaptive Tagesplanung)
   components/           Start, Cockpit, Sitzung, Kompetenzen, Erklaerung, Lehrbuch, Schemata,
                         Streit, Streitbild, Faelle, Microcases, Examensklausur, Karten, Training,
-                        Landesrecht, Visualisierung, Verwechslungen,
+                        Landesrecht, Methodik, Visualisierung, Verwechslungen,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
@@ -120,6 +128,7 @@ src/
     laender.js          16 Bundesländer: Landesgesetze und Stand des Widerspruchsverfahrens
     visualisierungen.js Entscheidungsbäume, Zeitachsen, Anspruchslandkarten
     verwechslungen.js   Begriffspaare mit Zuordnungsfällen für die Fehleranalyse
+    protokoll.js        Änderungsprotokoll
 ```
 
 ## Designsystem

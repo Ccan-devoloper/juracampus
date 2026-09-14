@@ -26,6 +26,7 @@ const Normenregister = lazy(() => import("./components/Normenregister"));
 const Lexikon = lazy(() => import("./components/Lexikon"));
 const Rechtsstand = lazy(() => import("./components/Rechtsstand"));
 const Landesrecht = lazy(() => import("./components/Landesrecht"));
+const Methodik = lazy(() => import("./components/Methodik"));
 const Suche = lazy(() => import("./components/Suche"));
 const Einstellungen = lazy(() => import("./components/Einstellungen"));
 
@@ -122,6 +123,7 @@ export default function App() {
     if (route.global === "lexikon") return <Lexikon route={route} nav={nav} />;
     if (route.global === "rechtsstand") return <Rechtsstand route={route} nav={nav} />;
     if (route.global === "landesrecht") return <Landesrecht route={route} nav={nav} />;
+    if (route.global === "methodik") return <Methodik route={route} nav={nav} />;
     if (route.global === "suche") return <Suche route={route} nav={nav} />;
     if (route.global === "einstellungen") return <Einstellungen route={route} nav={nav} dunkel={dunkel} setDunkel={setDunkel} />;
     const p = { route, nav, gebiet, stufe, band };
@@ -242,7 +244,7 @@ function RailBox({ band, xp }) {
 
 function MehrMenu({ nav, aktiv }) {
   const [offen, setOffen] = useState(false);
-  const rest = [...ANSICHTEN.filter((a) => !["cockpit", "sitzung", "kompetenzen", "karten"].includes(a.id)), ...GLOBAL.map((g) => ({ ...g, global: true })), { id: "einstellungen", label: "Einstellungen", Icon: IconEinstellungen, global: true }];
+  const rest = [...ANSICHTEN.filter((a) => !["cockpit", "sitzung", "kompetenzen", "karten"].includes(a.id)), ...GLOBAL.map((g) => ({ ...g, global: true })), { id: "methodik", label: "Methodik und Protokoll", Icon: IconAktuell, global: true }, { id: "einstellungen", label: "Einstellungen", Icon: IconEinstellungen, global: true }];
   return (
     <>
       <button aria-current={rest.some((r) => r.id === aktiv) ? "true" : undefined} onClick={() => setOffen(!offen)} aria-expanded={offen}><IconMehr />Mehr</button>

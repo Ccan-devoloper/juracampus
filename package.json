@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node tools/auffindbar.mjs",
     "preview": "vite preview",
     "import": "node tools/import.mjs",
     "check": "node tools/pruefen.mjs && node tools/kompetenz-check.mjs"
