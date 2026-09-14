@@ -8,6 +8,7 @@ import { useSpeicher } from "../lib/speicher";
 import { relevanzFuer, RELEVANZ } from "../data/relevanz";
 import { SCHEMATA } from "../data/schemata";
 import { Kicker } from "./Bausteine";
+import { LandHinweis } from "./Landesrecht";
 import { IconFlamme, IconHaken, IconPfeil, IconAktuell } from "./Icons";
 
 const THESEN = {
@@ -89,6 +90,8 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
         </div>
         <span className="zaehler">Band {band.nr} · {band.kapitel.length} Kapitel · {alleAbschnitte.length} Abschnitte · {campusFaelle.length} Fälle · {campusProbleme.length} Streitstände</span>
       </div>
+
+      {gebiet === "oeff" && <LandHinweis nav={nav} />}
 
       <div className="cockpit">
         <section className="these">

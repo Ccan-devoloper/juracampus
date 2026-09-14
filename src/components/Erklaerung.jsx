@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import { erklaerungFuer } from "../data/erklaerungen";
-import { IconPfeil, IconStreit, IconAuge } from "./Icons";
+import { useSpeicher } from "../lib/speicher";
+import { landFinden, WIDERSPRUCH_STAND } from "../data/laender";
+import { IconPfeil, IconStreit, IconAuge, IconRegister } from "./Icons";
+
+/* Landesbezug: Im Öffentlichen Recht steht in der Klausur nicht „das
+   Polizeigesetz", sondern das des Prüfungslandes. Wo das für eine Kompetenz
+   den Unterschied macht, sagt die Erklärung es ausdrücklich. */
+const LANDBEZUG = {
+  "oeff1-polizeirecht": (l) => ({ titel: "In Ihrem Bundesland", zeilen: [`Gefahrenabwehr: ${l.polizei.n} (${l.polizei.k})`, `Generalklausel: ${l.polizei.general}`, `Vollstreckung: ${l.vollstreckung.k}`], text: l.besonderheit }),
+  "oeff1-baurecht": (l) => ({ titel: "In Ihrem Bundesland", zeilen: [`Bauordnungsrecht: ${l.bau.n} (${l.bau.k})`, "Bauplanungsrecht bleibt Bundesrecht: BauGB und BauNVO"], text: "Die Abgrenzung von Planungs- und Ordnungsrecht ist überall gleich – die zitierte Bauordnung nicht." }),
+  "oeff1-anfechtungsklage": (l) => ({ titel: "Vorverfahren in Ihrem Bundesland", zeilen: [`Widerspruchsverfahren: ${WIDERSPRUCH_STAND[l.widerspruch.stand].label}`], text: l.widerspruch.text }),
+  "oeff1-verpflichtungsklage": (l) => ({ titel: "Vorverfahren in Ihrem Bundesland", zeilen: [`Widerspruchsverfahren: ${WIDERSPRUCH_STAND[l.widerspruch.stand].label}`], text: l.widerspruch.text }),
+  "oeff2-widerspruchsbescheid": (l) => ({ titel: "Vorverfahren in Ihrem Bundesland", zeilen: [`Widerspruchsverfahren: ${WIDERSPRUCH_STAND[l.widerspruch.stand].label}`], text: l.widerspruch.text }),
+  "oeff2-behoerdenklausur": (l) => ({ titel: "In Ihrem Bundesland", zeilen: [`Verwaltungsverfahren: ${l.vwvfg.k}`, `Vollstreckung und Zwangsmittel: ${l.vollstreckung.k}`, `Bauordnungsrecht: ${l.bau.k}`], text: "Der Bescheid zitiert Landesrecht – die Kürzel gehören in den verfügenden Teil und in die Begründung." }),
+  "oeff1-oeff-methodik": (l) => ({ titel: "In Ihrem Bundesland", zeilen: [`Verwaltungsverfahren: ${l.vwvfg.k}`, `Kommunalrecht: ${l.kommunal.k}`], text: "Der Bearbeitervermerk nennt regelmäßig das anwendbare Landesrecht. Er geht jeder Annahme vor." }),
+};
 
 /* Drei Stufen, weil drei verschiedene Fragen dahinterstehen. Die Stufe bleibt
    gespeichert: Wer einmal auf „Vertiefung" gestellt hat, will das Thema
@@ -14,6 +29,9 @@ const STUFEN = [
 export default function Erklaerung({ kompetenzId, offenAb = "kurz", kompakt }) {
   const e = erklaerungFuer(kompetenzId);
   const [stufe, setStufe] = useState(offenAb);
+  const [landId] = useSpeicher("bundesland", null);
+  const land = landFinden(landId);
+  const bezug = LANDBEZUG[kompetenzId];
   if (!e) return null;
 
   return (
@@ -28,6 +46,7 @@ export default function Erklaerung({ kompetenzId, offenAb = "kurz", kompakt }) {
       </div>
 
       <div className="erklaerung__inhalt">
+        {bezug && land && <LandBox {...bezug(land)} />}
         {stufe === "kurz" && (
           <>
             <p className="erklaerung__kurz">{e.kurz}</p>
@@ -72,6 +91,16 @@ export default function Erklaerung({ kompetenzId, offenAb = "kurz", kompakt }) {
         )}
       </div>
     </section>
+  );
+}
+
+function LandBox({ titel, zeilen, text }) {
+  return (
+    <aside className="landbox">
+      <h4><IconRegister /> {titel}</h4>
+      <ul>{zeilen.map((z, i) => <li key={i}>{z}</li>)}</ul>
+      {text && <p>{text}</p>}
+    </aside>
   );
 }
 

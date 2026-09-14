@@ -10,6 +10,7 @@ import { zuordnung } from "../src/lib/kompetenz.js";
 import { ERKLAERUNGEN } from "../src/data/erklaerungen.js";
 import { STREITBILDER } from "../src/data/streitbilder.js";
 import { MICROCASES, KLAUSUREN } from "../src/data/fallklassen.js";
+import { LAENDER, WIDERSPRUCH_STAND } from "../src/data/laender.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -62,6 +63,21 @@ for (const b of STREITBILDER) {
   if (typeof b.herrschend !== "number" || !b.ansichten[b.herrschend]) warn(`Streitbild „${b.id}“: herrschende Ansicht nicht bestimmt`);
 }
 console.log(`Streitbilder: ${STREITBILDER.length} von ${probleme.probleme.length} Streitständen ausgearbeitet (${Math.round((STREITBILDER.length / probleme.probleme.length) * 100)} %)`);
+
+/* Bundesländer */
+if (LAENDER.length !== 16) warn(`nur ${LAENDER.length} von 16 Bundesländern erfasst`);
+const landIds = new Set();
+for (const l of LAENDER) {
+  if (landIds.has(l.id)) warn(`Bundesland „${l.id}“ ist doppelt`);
+  landIds.add(l.id);
+  for (const feld of ["polizei", "bau", "kommunal", "vollstreckung", "vwvfg"]) {
+    if (!l[feld] || !l[feld].k || !l[feld].n) warn(`${l.name}: ${feld} unvollständig`);
+  }
+  if (!l.polizei.general || !/§|Art\./.test(l.polizei.general)) warn(`${l.name}: Generalklausel fehlt oder ist keine Fundstelle`);
+  if (!WIDERSPRUCH_STAND[l.widerspruch?.stand]) warn(`${l.name}: unbekannter Stand des Widerspruchsverfahrens`);
+  if (!l.besonderheit || l.besonderheit.length < 40) warn(`${l.name}: Besonderheit fehlt oder ist zu kurz`);
+}
+console.log(`Bundesländer: ${LAENDER.length} mit Gefahrenabwehr-, Bau-, Kommunal-, Verfahrens- und Vollstreckungsrecht`);
 
 /* Microcases und Examensklausuren */
 const knotenAlle = new Set(KOMPETENZEN.map((k) => k.id));

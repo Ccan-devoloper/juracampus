@@ -953,6 +953,50 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
   .horizont__skala { flex-wrap: wrap; }
 }
 
+.landbox { background: var(--feld); border-left: 3px solid var(--marke); border-radius: 0 var(--rund-klein) var(--rund-klein) 0; padding: 11px 14px; margin-bottom: 14px; }
+.landbox h4 { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--marke-text); margin: 0 0 6px; display: flex; align-items: center; gap: 6px; }
+.landbox h4 svg { width: 13px; height: 13px; }
+.landbox ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.landbox li { font-family: var(--mono); font-size: 12.5px; }
+.landbox p { margin: 8px 0 0; font-size: 13px; color: var(--ink-weich); line-height: 1.55; }
+
+/* ---------------------------------------------------------- Landesrecht */
+.landwahl { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.land { display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 8px; text-align: left; border: 1px solid var(--linie); background: var(--papier); border-radius: var(--rund-klein); padding: 8px 10px; cursor: pointer; }
+.land:hover { background: var(--marke-hell); }
+.land b { font-family: var(--mono); font-size: 12px; background: var(--feld); border-radius: 5px; padding: 3px 0; text-align: center; color: var(--ink-weich); }
+.land span { font-size: 12.5px; }
+.land[aria-pressed="true"] { border-color: var(--marke); background: var(--marke-hell); }
+.land[aria-pressed="true"] b { background: var(--marke); color: #fff; }
+
+.normtafel { display: grid; gap: 2px; }
+.normzeile { display: grid; grid-template-columns: 190px 1fr 16px; gap: 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--linie); }
+.normzeile:last-child { border-bottom: 0; }
+.normzeile__bereich { font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-weich); }
+.normzeile b { display: block; font-size: 14.5px; color: var(--marke-text); }
+.normzeile span { display: block; font-size: 13px; color: var(--ink-weich); }
+.normzeile em { display: block; font-family: var(--mono); font-size: 11.5px; color: var(--ink-weich); font-style: normal; margin-top: 2px; }
+.normzeile svg { width: 14px; height: 14px; color: var(--gruen); }
+
+.landtabelle { width: 100%; border-collapse: collapse; font-size: 13px; }
+.landtabelle th { text-align: left; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-weich); font-weight: 600; padding: 0 12px 8px 0; border-bottom: 1px solid var(--linie); white-space: nowrap; }
+.landtabelle td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--linie); vertical-align: top; }
+.landtabelle td.mono { font-family: var(--mono); font-size: 12px; }
+.landtabelle--eigen { background: var(--marke-hell); }
+.landtabelle--eigen td { font-weight: 500; }
+
+.landhinweis { display: grid; grid-template-columns: 1fr 18px; gap: 6px 14px; align-items: center; width: 100%; text-align: left; background: var(--marke-hell); border: 0; border-radius: var(--rund); padding: 14px 18px; cursor: pointer; margin-bottom: 14px; }
+.landhinweis strong { font-size: 15px; color: var(--marke-text); }
+.landhinweis span { font-size: 13px; color: var(--ink-weich); grid-column: 1; }
+.landhinweis svg { grid-row: 1 / 3; color: var(--marke-text); }
+.landhinweis:hover { background: var(--marke); }
+.landhinweis:hover strong, .landhinweis:hover span, .landhinweis:hover svg { color: #fff; }
+
+@media (max-width: 760px) {
+  .normzeile { grid-template-columns: 1fr 16px; }
+  .normzeile__bereich { grid-column: 1 / -1; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

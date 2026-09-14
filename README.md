@@ -48,6 +48,12 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
 - **Klausurmodus**: Fälle unter Zeit mit laufender Uhr, gesperrter Lösung und Auswertung.
 - **Lernplan**: verteilt die Kapitel bis zum Examenstermin, hält Wiederholungswochen frei
   und zeigt, ob man im Plan liegt.
+- **Landesrecht**: Juristische Ausbildung ist Landesrecht. Wer in Bayern Polizeirecht lernt,
+  zitiert Art. 11 PAG, in Nordrhein-Westfalen § 8 PolG NRW und § 14 OBG NRW – und in
+  Schleswig-Holstein steht beides samt Vollstreckungsrecht im LVwG. Nach Wahl des Bundeslands
+  nennen die Erklärungen im Öffentlichen Recht die Gesetze des Prüfungslandes und den Stand des
+  Widerspruchsverfahrens; alle sechzehn sind vergleichbar. Bewusst nicht enthalten sind
+  Klausurzahlen, Notenstufen und Termine – eine falsche Zahl wäre schlimmer als keine.
 - **Normenregister** (über 800 Einzelnormen aus 32 Gesetzen, automatisch aus allen Zitaten),
   **Lexikon** (2.325 Begriffe mit Fundstellen), **Rechtsstand 2026** (Sperrliste veralteter
   Zahlen und Normen, Hinweise im Lehrbuch), **Volltextsuche** über alle Bände.
@@ -90,6 +96,7 @@ src/
                         sitzung (adaptive Tagesplanung)
   components/           Start, Cockpit, Sitzung, Kompetenzen, Erklaerung, Lehrbuch, Schemata,
                         Streit, Streitbild, Faelle, Microcases, Examensklausur, Karten, Training,
+                        Landesrecht,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
@@ -102,6 +109,7 @@ src/
     erklaerungen.js     Dreistufige Erklärungen je Kompetenz (handgeschrieben)
     streitbilder.js     Streitstände im Achtschritt-Modell (handgeschrieben)
     fallklassen.js      Microcases und Examensklausuren mit Erwartungshorizont
+    laender.js          16 Bundesländer: Landesgesetze und Stand des Widerspruchsverfahrens
 ```
 
 ## Designsystem

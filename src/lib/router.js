@@ -6,7 +6,7 @@ import { laden, sichern } from "./speicher";
    Globale Routen: #/normen/BGB%20%C2%A7%20433 · #/lexikon · #/rechtsstand · #/suche/wort */
 
 export const GEBIETE = ["zivil", "oeff", "straf"];
-export const GLOBAL = ["normen", "lexikon", "rechtsstand", "suche", "einstellungen", "start"];
+export const GLOBAL = ["normen", "lexikon", "rechtsstand", "landesrecht", "suche", "einstellungen", "start"];
 
 export function parseHash(hash) {
   const teile = (hash || "").replace(/^#\/?/, "").split("/").filter(Boolean).map((t) => { try { return decodeURIComponent(t); } catch { return t; } });

@@ -3,6 +3,7 @@ import { useRoute, navigiere } from "./lib/router";
 import { useSpeicher, laden } from "./lib/speicher";
 import { werk, bandFuer, GEBIET_NAME, STUFE_NAME } from "./lib/daten";
 import { stand as xpStand, streak, levelFuer } from "./lib/xp";
+import { landFinden } from "./data/laender";
 import { NormPopover, XpToast, Laden } from "./components/Bausteine";
 import {
   IconCockpit, IconBuch, IconSchema, IconStreit, IconFaelle, IconKarten, IconTraining, IconKlausur, IconPlan,
@@ -24,6 +25,7 @@ const Lernplan = lazy(() => import("./components/Lernplan"));
 const Normenregister = lazy(() => import("./components/Normenregister"));
 const Lexikon = lazy(() => import("./components/Lexikon"));
 const Rechtsstand = lazy(() => import("./components/Rechtsstand"));
+const Landesrecht = lazy(() => import("./components/Landesrecht"));
 const Suche = lazy(() => import("./components/Suche"));
 const Einstellungen = lazy(() => import("./components/Einstellungen"));
 
@@ -45,6 +47,7 @@ const GLOBAL = [
   { id: "normen", label: "Normenregister", Icon: IconRegister },
   { id: "lexikon", label: "Lexikon", Icon: IconLexikon },
   { id: "rechtsstand", label: "Rechtsstand 2026", Icon: IconAktuell },
+  { id: "landesrecht", label: "Landesrecht", Icon: IconRegister },
 ];
 
 const GEBIETE = [
@@ -112,11 +115,13 @@ export default function App() {
     );
   }
 
+  const land = landFinden(laden("bundesland", null));
   const ansichtAktiv = route.global || route.ansicht || "cockpit";
   const Ansicht = (() => {
     if (route.global === "normen") return <Normenregister route={route} nav={nav} />;
     if (route.global === "lexikon") return <Lexikon route={route} nav={nav} />;
     if (route.global === "rechtsstand") return <Rechtsstand route={route} nav={nav} />;
+    if (route.global === "landesrecht") return <Landesrecht route={route} nav={nav} />;
     if (route.global === "suche") return <Suche route={route} nav={nav} />;
     if (route.global === "einstellungen") return <Einstellungen route={route} nav={nav} dunkel={dunkel} setDunkel={setDunkel} />;
     const p = { route, nav, gebiet, stufe, band };
@@ -175,7 +180,9 @@ export default function App() {
         <span className="stufen__spacer" />
         <div className="stufen__global">
           {GLOBAL.map((g) => (
-            <button key={g.id} className="stufe" aria-current={route.global === g.id ? "true" : undefined} onClick={() => nav({ global: g.id })}><g.Icon /> {g.label}</button>
+            <button key={g.id} className="stufe" aria-current={route.global === g.id ? "true" : undefined} onClick={() => nav({ global: g.id })}>
+              <g.Icon /> {g.id === "landesrecht" && land ? land.kurz : g.label}
+            </button>
           ))}
         </div>
       </nav>
