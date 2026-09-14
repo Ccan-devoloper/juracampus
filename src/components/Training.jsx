@@ -8,6 +8,9 @@ import { quizFuer } from "../data/quiz";
 import { normenFuer } from "../data/normenquiz";
 import { SCHEMATA } from "../data/schemata";
 import { SchemaTrainer } from "./Schemata";
+import Verwechslungen from "./Verwechslungen";
+import Visualisierung from "./Visualisierung";
+import { baeumeFuer, achsenFuer, karteFuer } from "../data/visualisierungen";
 import { Kicker, Laden, Leer, mischen } from "./Bausteine";
 import { IconAuge, IconHaken, IconShuffle } from "./Icons";
 
@@ -17,6 +20,8 @@ const MODI = [
   { id: "norm", label: "Normen-Trainer", text: "Welche Norm regelt was?" },
   { id: "schema", label: "Schema-Trainer", text: "Prüfungsschritte in die richtige Reihenfolge" },
   { id: "rs", label: "Rechtsstand 2026", text: "Neue Zahlen und Normen gegen Altstand" },
+  { id: "verwechslung", label: "Verwechslungen", text: "Vertreter oder Bote? Zuordnen statt definieren" },
+  { id: "bild", label: "Schaubilder", text: "Entscheidungsbäume, Fristenachsen, Anspruchslandkarte" },
 ];
 
 export default function Training({ route, nav, gebiet, stufe }) {
@@ -43,6 +48,8 @@ export default function Training({ route, nav, gebiet, stufe }) {
           {modus === "norm" && <NormenTrainer key={`${gebiet}-${stufe}`} gebiet={gebiet} stufe={stufe} zaehlen={(r) => zaehlen("norm", r)} />}
           {modus === "schema" && <SchemaRunde key={`${gebiet}-${stufe}`} gebiet={gebiet} stufe={stufe} />}
           {modus === "rs" && (daten ? <RechtsstandTrainer rechtsstand={daten.rechtsstand} zaehlen={(r) => zaehlen("rs", r)} /> : <Laden />)}
+          {modus === "verwechslung" && <Verwechslungen key={`${gebiet}-${stufe}`} gebiet={gebiet} stufe={stufe} nav={nav} />}
+          {modus === "bild" && <Schaubilder gebiet={gebiet} stufe={stufe} />}
         </div>
         <aside className="seitenstat">
           <div className="panel">
@@ -56,6 +63,27 @@ export default function Training({ route, nav, gebiet, stufe }) {
           </div>
         </aside>
       </div>
+    </>
+  );
+}
+
+/* Schaubilder: alles, was für dieses Gebiet und diese Stufe hinterlegt ist –
+   begehbare Entscheidungsbäume, Fristenachsen, die Anspruchslandkarte. */
+function Schaubilder({ gebiet, stufe }) {
+  const baeume = useMemo(() => baeumeFuer(gebiet, stufe), [gebiet, stufe]);
+  const achsen = useMemo(() => achsenFuer(gebiet, stufe), [gebiet, stufe]);
+  const karte = useMemo(() => karteFuer(gebiet, stufe), [gebiet, stufe]);
+  if (!baeume.length && !achsen.length && !karte) return <Leer titel="Für diesen Bereich gibt es noch keine Schaubilder" text="Die Sammlung wächst Gebiet für Gebiet." />;
+  return (
+    <>
+      <p className="lead" style={{ fontSize: 14, marginTop: 0 }}>
+        Nicht jede Grafik hilft. Diese drei Formen tragen juristische Information, weil sie eine Struktur sichtbar machen,
+        die im Fließtext untergeht: Entscheidungsbäume zeigen die Reihenfolge der Weichen, Zeitachsen die Fristen
+        nebeneinander, die Landkarte das Sperrsystem der Anspruchsgrundlagen.
+      </p>
+      {karte && <Visualisierung v={{ ...karte, art: "karte" }} />}
+      {baeume.map((b) => <Visualisierung key={b.id} v={{ ...b, art: "baum" }} />)}
+      {achsen.map((z) => <Visualisierung key={z.id} v={{ ...z, art: "achse" }} />)}
     </>
   );
 }

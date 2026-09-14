@@ -11,6 +11,8 @@ import { ERKLAERUNGEN } from "../src/data/erklaerungen.js";
 import { STREITBILDER } from "../src/data/streitbilder.js";
 import { MICROCASES, KLAUSUREN } from "../src/data/fallklassen.js";
 import { LAENDER, WIDERSPRUCH_STAND } from "../src/data/laender.js";
+import { BAEUME, ZEITACHSEN, LANDKARTEN } from "../src/data/visualisierungen.js";
+import { VERWECHSLUNGEN } from "../src/data/verwechslungen.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -63,6 +65,51 @@ for (const b of STREITBILDER) {
   if (typeof b.herrschend !== "number" || !b.ansichten[b.herrschend]) warn(`Streitbild „${b.id}“: herrschende Ansicht nicht bestimmt`);
 }
 console.log(`Streitbilder: ${STREITBILDER.length} von ${probleme.probleme.length} Streitständen ausgearbeitet (${Math.round((STREITBILDER.length / probleme.probleme.length) * 100)} %)`);
+
+/* Visualisierungen: jeder Baum muss in Blättern enden, jedes Blatt eine Norm nennen. */
+function blaetter(k, id, tiefe = 0) {
+  if (tiefe > 6) { warn(`Baum „${id}“: mehr als sechs Ebenen tief`); return 0; }
+  if (k.e) {
+    if (!k.n) warn(`Baum „${id}“: Blatt „${k.e}“ ohne Norm`);
+    if (!k.h || k.h.length < 25) warn(`Baum „${id}“: Blatt „${k.e}“ ohne brauchbaren Hinweis`);
+    return 1;
+  }
+  if (!k.f || !k.f.includes("?")) warn(`Baum „${id}“: Knoten ohne Frage`);
+  if (!k.ja || !k.nein) { warn(`Baum „${id}“: Knoten ohne beide Zweige`); return 0; }
+  return blaetter(k.ja, id, tiefe + 1) + blaetter(k.nein, id, tiefe + 1);
+}
+const vKnoten = new Set(KOMPETENZEN.map((x) => x.id));
+let blattzahl = 0;
+for (const b of BAEUME) {
+  if (!vKnoten.has(b.k)) warn(`Baum „${b.id}“ zeigt auf keine Kompetenz (${b.k})`);
+  blattzahl += blaetter(b.wurzel, b.id);
+}
+for (const z of ZEITACHSEN) {
+  if (!vKnoten.has(z.k)) warn(`Zeitachse „${z.id}“ zeigt auf keine Kompetenz (${z.k})`);
+  if (!z.punkte || z.punkte.length < 3) warn(`Zeitachse „${z.id}“: weniger als drei Punkte`);
+}
+for (const l of LANDKARTEN) {
+  if (!vKnoten.has(l.k)) warn(`Landkarte „${l.id}“ zeigt auf keine Kompetenz (${l.k})`);
+  for (const g of l.gruppen) if (!g.sperrt) warn(`Landkarte „${l.id}“: Gruppe „${g.name}“ ohne Sperrhinweis – dann trägt die Karte keine Aussage`);
+}
+console.log(`Schaubilder: ${BAEUME.length} Entscheidungsbäume mit ${blattzahl} Blättern · ${ZEITACHSEN.length} Zeitachsen · ${LANDKARTEN.length} Anspruchslandkarten`);
+
+/* Verwechslungen */
+let zuordnungen = 0;
+for (const v of VERWECHSLUNGEN) {
+  if (!vKnoten.has(v.k)) warn(`Verwechslung „${v.k}“ zeigt auf keine Kompetenz`);
+  if (!v.merkmal || v.merkmal.length < 40) warn(`Verwechslung „${v.k}“: Unterscheidungsmerkmal fehlt oder ist zu kurz`);
+  if (!v.folge || v.folge.length < 40) warn(`Verwechslung „${v.k}“: Rechtsfolge der Unterscheidung fehlt`);
+  if (!v.faelle || v.faelle.length < 4) warn(`Verwechslung „${v.k}“: weniger als vier Zuordnungsfälle`);
+  const a = (v.faelle || []).filter((f) => f.r === "a").length;
+  const b = (v.faelle || []).filter((f) => f.r === "b").length;
+  if (a === 0 || b === 0) warn(`Verwechslung „${v.k}“: alle Fälle zeigen auf dieselbe Seite`);
+  for (const f of v.faelle || []) {
+    zuordnungen++;
+    if (!f.w || f.w.length < 30) warn(`Verwechslung „${v.k}“: Fall ohne brauchbare Begründung`);
+  }
+}
+console.log(`Verwechslungen: ${VERWECHSLUNGEN.length} Paare mit ${zuordnungen} Zuordnungsfällen`);
 
 /* Bundesländer */
 if (LAENDER.length !== 16) warn(`nur ${LAENDER.length} von 16 Bundesländern erfasst`);

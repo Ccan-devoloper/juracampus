@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { erklaerungFuer } from "../data/erklaerungen";
 import { useSpeicher } from "../lib/speicher";
 import { landFinden, WIDERSPRUCH_STAND } from "../data/laender";
+import { visualisierungenFuer } from "../data/visualisierungen";
+import Visualisierung from "./Visualisierung";
 import { IconPfeil, IconStreit, IconAuge, IconRegister } from "./Icons";
 
 /* Landesbezug: Im Öffentlichen Recht steht in der Klausur nicht „das
@@ -32,6 +34,7 @@ export default function Erklaerung({ kompetenzId, offenAb = "kurz", kompakt }) {
   const [landId] = useSpeicher("bundesland", null);
   const land = landFinden(landId);
   const bezug = LANDBEZUG[kompetenzId];
+  const bilder = visualisierungenFuer(kompetenzId);
   if (!e) return null;
 
   return (
@@ -56,6 +59,7 @@ export default function Erklaerung({ kompetenzId, offenAb = "kurz", kompakt }) {
 
         {stufe === "mittel" && (
           <>
+            {bilder.map((v) => <Visualisierung key={v.id} v={v} />)}
             <ol className="erklaerung__schritte">
               {e.mittel.map((m, i) => (
                 <li key={i}><strong>{m.t}</strong><p>{m.x}</p></li>

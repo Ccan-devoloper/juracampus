@@ -997,6 +997,75 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
   .normzeile__bereich { grid-column: 1 / -1; }
 }
 
+/* ------------------------------------------- Visualisierungen */
+.vis { background: var(--papier); border: 1px solid var(--linie); border-radius: var(--rund); padding: 18px 20px; margin: 14px 0; }
+.vis__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.vis__kopf h3 { font-family: var(--serif); font-size: 16.5px; margin: 0; display: flex; align-items: center; gap: 8px; }
+.vis__kopf h3 svg { width: 16px; height: 16px; color: var(--marke-text); }
+.vis__einstieg { font-size: 13.5px; color: var(--ink-weich); margin: 0 0 14px; line-height: 1.6; }
+
+.baumpfad { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+.baumschritt { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; font-size: 13px; padding: 8px 12px; border-radius: var(--rund-klein); background: var(--feld); color: var(--ink-weich); }
+.baumschritt b { font-size: 12px; padding: 2px 10px; border-radius: 99px; }
+.baumschritt--ja b { background: var(--gruen); color: #fff; }
+.baumschritt--nein b { background: var(--linie); color: var(--ink); }
+.baumfrage { border-left: 3px solid var(--marke); padding: 4px 0 4px 14px; }
+.baumfrage p { font-family: var(--serif); font-size: 16px; line-height: 1.6; margin: 0 0 12px; }
+.baumblatt { border-left: 3px solid var(--gruen); background: var(--gruen-feld); border-radius: 0 var(--rund-klein) var(--rund-klein) 0; padding: 14px 16px; }
+.baumblatt__marke { display: inline-flex; align-items: center; gap: 6px; font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--gruen); margin-bottom: 6px; }
+.baumblatt__marke svg { width: 12px; height: 12px; }
+.baumblatt strong { display: block; font-family: var(--serif); font-size: 17px; margin-bottom: 4px; }
+.baumblatt code { display: inline-block; font-family: var(--mono); font-size: 12.5px; background: var(--papier); border-radius: 5px; padding: 2px 8px; margin-bottom: 8px; }
+.baumblatt p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.6; color: var(--ink-weich); }
+
+.achse { list-style: none; margin: 0; padding: 0 0 0 18px; border-left: 2px solid var(--linie); display: grid; gap: 16px; }
+.achspunkt { position: relative; display: grid; grid-template-columns: 110px 1fr; gap: 14px; align-items: start; }
+.achspunkt::before { content: ""; position: absolute; left: -24px; top: 5px; width: 11px; height: 11px; border-radius: 99px; background: var(--linie); border: 2px solid var(--papier); }
+.achspunkt--start::before { background: var(--marke); }
+.achspunkt--eng::before { background: var(--rot); }
+.achspunkt--weit::before { background: var(--orange); }
+.achspunkt--ende::before { background: var(--gruen); }
+.achspunkt__frist { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--marke-text); }
+.achspunkt strong { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.achspunkt p { margin: 0; font-size: 13px; color: var(--ink-weich); line-height: 1.55; }
+
+.landkarte { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.lkgruppe { display: grid; grid-template-columns: 30px 1fr; gap: 12px; }
+.lkgruppe__nr { width: 26px; height: 26px; border-radius: 99px; background: var(--marke); color: #fff; display: grid; place-items: center; font-family: var(--mono); font-size: 12px; }
+.lkgruppe__inhalt h4 { font-family: var(--serif); font-size: 15px; margin: 2px 0 6px; }
+.lkgruppe__inhalt ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.lkgruppe__inhalt ul li { display: grid; grid-template-columns: 190px 1fr; gap: 12px; font-size: 13px; }
+.lkgruppe__inhalt code { font-family: var(--mono); font-size: 12px; color: var(--marke-text); }
+.lkgruppe__inhalt ul li span { color: var(--ink-weich); }
+.lkgruppe__sperre { margin: 8px 0 0; font-size: 12.5px; color: var(--rot); background: var(--rot-feld); border-radius: var(--rund-klein); padding: 7px 10px; display: flex; align-items: flex-start; gap: 7px; line-height: 1.5; }
+.lkgruppe__sperre svg { width: 13px; height: 13px; flex-shrink: 0; margin-top: 2px; }
+
+/* -------------------------------------------------- Verwechslungen */
+.fehleranalyse { border-left: 4px solid var(--rot); margin-bottom: 14px; }
+.verwechslungsliste { display: grid; gap: 12px; }
+.verwechslung { background: var(--papier); border-radius: var(--rund); box-shadow: var(--schatten); padding: 16px 18px; border-left: 4px solid var(--orange); }
+.verwechslung--sitzt { border-left-color: var(--gruen); }
+.verwechslung__paar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.verwechslung__paar span { font-family: var(--serif); font-size: 16px; background: var(--feld); border-radius: var(--rund-klein); padding: 4px 12px; }
+.verwechslung__paar em { font-size: 12px; color: var(--ink-weich); font-style: normal; }
+.verwechslung__merkmal { margin: 0 0 6px; font-size: 14px; line-height: 1.6; }
+.verwechslung__folge { margin: 0 0 12px; font-size: 13px; color: var(--ink-weich); line-height: 1.55; }
+.verwechslung__fuss { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.zuordnung { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+.zuordnung__seite { border: 2px solid var(--linie); background: var(--papier); border-radius: var(--rund-klein); padding: 14px 16px; font-family: var(--serif); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--ink); }
+.zuordnung__seite:hover:not(:disabled) { border-color: var(--marke); background: var(--marke-hell); }
+.zuordnung__seite:disabled { cursor: default; }
+.zuordnung--richtig { border-color: var(--gruen); background: var(--gruen-feld); color: var(--gruen); }
+.zuordnung--falsch { border-color: var(--rot); background: var(--rot-feld); color: var(--rot); }
+.zuordnung__seite svg { width: 15px; height: 15px; }
+
+@media (max-width: 760px) {
+  .achspunkt { grid-template-columns: 1fr; gap: 2px; }
+  .lkgruppe__inhalt ul li { grid-template-columns: 1fr; gap: 0; }
+  .zuordnung { grid-template-columns: 1fr; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

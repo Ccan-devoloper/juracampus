@@ -45,6 +45,14 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
   Normen, Rechtsstand 2026 und eigenen Karten (aus jedem Abschnitt „auf den Kartenstapel“).
 - **Training**: Wissens-Quiz, Definitionen-Trainer, Normen-Trainer, Schema-Trainer,
   Rechtsstand-Trainer; falsche Antworten setzen die zugehörige Karte auf „morgen fällig“.
+- **Verwechslungen und Fehleranalyse**: 14 Begriffspaare, an denen Klausuren regelmäßig
+  scheitern – Vertreter/Bote, Einwendung/Einrede, error in persona/aberratio ictus,
+  Sachrüge/Verfahrensrüge – mit 58 kurzen Zuordnungsfällen. Trainiert wird nicht die
+  Definition, sondern die Zuordnung; die Fehleranalyse benennt anschließend, welche
+  Unterscheidung bei Ihnen schiefgeht.
+- **Schaubilder**: 8 begehbare Entscheidungsbäume (jede Weiche eine Frage, jedes Blatt eine
+  Norm und ein Satz dazu, warum es dort endet), 5 Fristenachsen und 3 Anspruchslandkarten,
+  die das Sperrsystem der Anspruchsgrundlagen zeigen.
 - **Klausurmodus**: Fälle unter Zeit mit laufender Uhr, gesperrter Lösung und Auswertung.
 - **Lernplan**: verteilt die Kapitel bis zum Examenstermin, hält Wiederholungswochen frei
   und zeigt, ob man im Plan liegt.
@@ -96,7 +104,7 @@ src/
                         sitzung (adaptive Tagesplanung)
   components/           Start, Cockpit, Sitzung, Kompetenzen, Erklaerung, Lehrbuch, Schemata,
                         Streit, Streitbild, Faelle, Microcases, Examensklausur, Karten, Training,
-                        Landesrecht,
+                        Landesrecht, Visualisierung, Verwechslungen,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
@@ -110,6 +118,8 @@ src/
     streitbilder.js     Streitstände im Achtschritt-Modell (handgeschrieben)
     fallklassen.js      Microcases und Examensklausuren mit Erwartungshorizont
     laender.js          16 Bundesländer: Landesgesetze und Stand des Widerspruchsverfahrens
+    visualisierungen.js Entscheidungsbäume, Zeitachsen, Anspruchslandkarten
+    verwechslungen.js   Begriffspaare mit Zuordnungsfällen für die Fehleranalyse
 ```
 
 ## Designsystem
