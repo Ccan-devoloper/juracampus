@@ -895,6 +895,64 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
   .ansichten { grid-template-columns: 1fr; }
 }
 
+/* ---------------------------------------------- Microcase und Klausur */
+.microkopf { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+.microcase { background: var(--papier); border-radius: var(--rund); box-shadow: var(--schatten); padding: 24px 26px; border-left: 4px solid var(--marke); }
+.microcase__marke { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.microcase__marke span { font-family: var(--mono); font-size: 11.5px; color: var(--ink-weich); }
+.microcase__sachverhalt { font-family: var(--serif); font-size: 16.5px; line-height: 1.65; margin: 0 0 16px; }
+.microcase__frage { font-size: 20px; margin: 0 0 14px; }
+.microcase__hinweis { font-size: 13px; color: var(--ink-weich); margin: 0 0 14px; }
+.microcase__antwort { background: var(--feld); border-radius: var(--rund-klein); padding: 14px 16px; }
+.microcase__antwort h3 { font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-weich); margin: 0 0 4px; }
+.microcase__antwort h3 + p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.6; }
+.microcase__antwort p:last-child { margin-bottom: 0; }
+.microcase__urteil { margin-top: 16px; border-top: 1px solid var(--linie); padding-top: 12px; }
+.microcase__urteil > span { display: block; font-size: 12.5px; color: var(--ink-weich); margin-bottom: 8px; }
+.microcase__fuss { font-size: 12.5px; color: var(--ink-weich); margin-top: 16px; line-height: 1.6; }
+.linkknopf { background: none; border: 0; color: var(--marke-text); cursor: pointer; font-size: 12.5px; padding: 0; display: inline-flex; align-items: center; gap: 4px; }
+.linkknopf svg { width: 13px; height: 13px; }
+.bewertung--1 { background: var(--rot-feld); color: var(--rot); }
+.bewertung--2 { background: var(--orange-feld); color: var(--orange); }
+.bewertung--3 { background: var(--gruen-feld); color: var(--gruen); }
+
+.klausurliste { display: grid; gap: 12px; }
+.klausurkarte { text-align: left; background: var(--papier); border: 0; border-radius: var(--rund); box-shadow: var(--schatten); padding: 18px 20px; cursor: pointer; border-left: 4px solid var(--marke); display: grid; gap: 4px; }
+.klausurkarte:hover { background: var(--marke-hell); }
+.klausurkarte__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.klausurkarte strong { font-family: var(--serif); font-size: 18px; }
+.klausurkarte p { margin: 0; font-size: 13.5px; color: var(--ink-weich); }
+.klausurkarte__vermerk { font-size: 12px; color: var(--ink-weich); font-style: italic; margin-top: 6px; }
+
+.klausuruhr { text-align: right; font-family: var(--mono); }
+.klausuruhr span { display: block; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-weich); }
+.klausuruhr b { font-size: 26px; color: var(--ink); }
+.klausuruhr--knapp b { color: var(--orange); }
+.klausuruhr--aus b { color: var(--rot); }
+
+.bearbeitervermerk { margin: 0; font-size: 14.5px; line-height: 1.65; background: var(--feld); border-left: 3px solid var(--marke); padding: 12px 14px; border-radius: 0 var(--rund-klein) var(--rund-klein) 0; }
+.sachverhalt p { font-family: var(--serif); font-size: 16px; line-height: 1.72; margin: 0 0 14px; }
+.fragen { border-top: 1px solid var(--linie); padding-top: 12px; margin-top: 6px; }
+.fragen p { margin: 0 0 6px; font-size: 15px; }
+
+.horizont { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.horizont li { border-left: 3px solid var(--linie); padding-left: 14px; }
+.horizont__kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.horizont__kopf strong { font-family: var(--serif); font-size: 15.5px; }
+.horizont__max { font-family: var(--mono); font-size: 11.5px; color: var(--marke-text); white-space: nowrap; }
+.horizont li p { margin: 4px 0 8px; font-size: 13.5px; color: var(--ink-weich); line-height: 1.6; }
+.horizont__skala { display: flex; gap: 6px; }
+.horizont__skala button { border: 1px solid var(--linie); background: var(--papier); border-radius: var(--rund-klein); padding: 4px 12px; font-family: var(--mono); font-size: 12px; cursor: pointer; color: var(--ink-weich); }
+.horizont__skala button[aria-pressed="true"] { background: var(--marke); border-color: var(--marke); color: #fff; }
+.klausurhinweise { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+.klausurhinweise li { font-size: 13.5px; color: var(--ink-weich); line-height: 1.6; }
+
+@media (max-width: 760px) {
+  .microcase { padding: 18px; }
+  .microcase__frage { font-size: 17px; }
+  .horizont__skala { flex-wrap: wrap; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

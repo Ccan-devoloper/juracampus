@@ -35,8 +35,12 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
   Schritt ausgearbeitet: Problemtrigger, Streitfrage in einem Satz, jede Ansicht mit tragenden
   Argumenten *und* Gegenargumenten, Rechtsprechung, Entscheidungserheblichkeit („wann macht
   der Streit überhaupt einen Unterschied?“) und Klausurformulierung mit Fundstelle.
-- **Fälle**: 249 Fälle (Band 9) als Sachverhalt → Kernfragen → eigene Lösungsskizze →
-  gesperrte Lösungsskizze → Examenshinweis → Selbstbewertung; Klassiker-Register.
+- **Fälle in drei Größen**, weil drei verschiedene Fähigkeiten dahinterstehen:
+  **88 Microcases** (2 Minuten, genau ein Problem, sofortige Rückmeldung – die Brücke zwischen
+  Karteikarte und Fall), **249 Übungsfälle** aus dem Werk (Sachverhalt → Kernfragen → eigene
+  Lösungsskizze → gesperrte Lösungsskizze → Examenshinweis → Selbstbewertung; Klassiker-Register)
+  und **6 Examensklausuren** mit vollständigem Sachverhalt, Bearbeitervermerk, laufender Uhr und
+  einem Erwartungshorizont, der jeden Block mit Punkten bewertet – zusammen genau 100.
 - **Karteikarten** mit FSRS-Wiederholung aus Definitionen, Streitständen, Fällen, Schemata,
   Normen, Rechtsstand 2026 und eigenen Karten (aus jedem Abschnitt „auf den Kartenstapel“).
 - **Training**: Wissens-Quiz, Definitionen-Trainer, Normen-Trainer, Schema-Trainer,
@@ -85,7 +89,7 @@ src/
                         karten, kompetenz (Zuordnung und Beherrschungsgrad),
                         sitzung (adaptive Tagesplanung)
   components/           Start, Cockpit, Sitzung, Kompetenzen, Erklaerung, Lehrbuch, Schemata,
-                        Streit, Faelle, Karten, Training,
+                        Streit, Streitbild, Faelle, Microcases, Examensklausur, Karten, Training,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
@@ -97,6 +101,7 @@ src/
     kompetenzen.js      Kompetenzknoten mit Normen, Kapitel-Regex, Stichworten, Verwechslungen
     erklaerungen.js     Dreistufige Erklärungen je Kompetenz (handgeschrieben)
     streitbilder.js     Streitstände im Achtschritt-Modell (handgeschrieben)
+    fallklassen.js      Microcases und Examensklausuren mit Erwartungshorizont
 ```
 
 ## Designsystem

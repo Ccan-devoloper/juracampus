@@ -6,10 +6,38 @@ import { gutschreiben, XP } from "../lib/xp";
 import { Fallansicht } from "./Faelle";
 import { Kicker, Laden, mischen } from "./Bausteine";
 import { IconKlausur, IconShuffle, IconStart } from "./Icons";
+import Examensklausur from "./Examensklausur";
+import { klausurenFuer } from "../data/fallklassen";
 
 const fmt = (s) => `${String(Math.floor(s / 3600)).padStart(2, "0")}:${String(Math.floor((s % 3600) / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
-export default function Klausur({ nav, gebiet, stufe }) {
+/* Zwei Betriebsarten: die selbst zusammengestellte Übungsklausur aus den
+   Fällen des Werks und die vollständige Examensklausur mit Sachverhalt,
+   Bearbeitervermerk und Erwartungshorizont. Die erste trainiert Tempo, die
+   zweite Priorisierung – und nur die zweite sagt, was ein Gedanke wert ist. */
+export default function Klausur(props) {
+  const { nav, gebiet, stufe, route } = props;
+  const examen = klausurenFuer(gebiet, stufe);
+  const [modus, setModus] = useState(route.id ? "examen" : "uebung");
+  if (modus === "examen" || route.id) {
+    return (
+      <>
+        <div className="pagehead">
+          <div>
+            <Kicker>{GEBIET_NAME[gebiet]} · {STUFE_NAME[stufe]}</Kicker>
+            <h1>Examensklausur</h1>
+            <p className="lead">Vollständiger Sachverhalt, Bearbeitervermerk, fünf Stunden – und danach ein Erwartungshorizont, der nicht nur sagt, was richtig ist, sondern was wie viel wert ist. Wer weiß, dass die Zulässigkeit sechs von hundert Punkten bringt, schreibt keine Seite darüber.</p>
+          </div>
+          {!route.id && <button className="btn btn--linie" onClick={() => setModus("uebung")}>Zur Übungsklausur aus Fällen</button>}
+        </div>
+        <Examensklausur {...props} />
+      </>
+    );
+  }
+  return <Uebungsklausur {...props} zuExamen={examen.length ? () => setModus("examen") : null} />;
+}
+
+function Uebungsklausur({ nav, gebiet, stufe, zuExamen }) {
   const faelle = useDaten("faelle");
   const { stand } = useFaelleStand();
   const [laeufe, setLaeufe] = useSpeicher("klausuren", []);
@@ -41,7 +69,7 @@ export default function Klausur({ nav, gebiet, stufe }) {
           <h1>Klausurmodus</h1>
           <p className="lead">Fälle unter Zeitbedingungen: laufende Uhr, gesperrte Lösung, ehrliche Selbstbewertung. Jeder Lauf wird ausgewertet und bringt {XP.klausur} XP – plus die Punkte für jeden bewerteten Fall.</p>
         </div>
-        <span className="zaehler">{pool.length} Fälle · {offen.length} noch offen</span>
+        {zuExamen ? <button className="btn" onClick={zuExamen}><IconKlausur /> Echte Examensklausur</button> : <span className="zaehler">{pool.length} Fälle · {offen.length} noch offen</span>}
       </div>
       <div className="raster raster--2">
         <section className="panel">

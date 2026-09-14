@@ -5,13 +5,14 @@ import { useSpeicher } from "../lib/speicher";
 import { HEUTE } from "../lib/wiederholung";
 import { kartenBauen, KARTENTYPEN } from "../lib/karten";
 import { zuordnung, beherrschungen, dringlichkeit, naechsterSchritt } from "../lib/kompetenz";
-import { planen, erledigt, kartenHeute, quizAntworten, BUDGETS } from "../lib/sitzung";
+import { planen, erledigt, kartenHeute, quizAntworten, microBearbeitet, BUDGETS } from "../lib/sitzung";
+import { microFuer } from "../data/fallklassen";
 import { quizFuer } from "../data/quiz";
 import { Kicker, Laden, Leer } from "./Bausteine";
-import { IconPfeil, IconBuch, IconFaelle, IconKarten, IconTraining, IconStreit, IconHaken, IconKlausur } from "./Icons";
+import { IconPfeil, IconBuch, IconFaelle, IconKarten, IconTraining, IconStreit, IconHaken, IconKlausur, IconStart } from "./Icons";
 
-const ART_ICON = { karten: IconKarten, lesen: IconBuch, fall: IconFaelle, streit: IconStreit, quiz: IconTraining };
-const ART_NAME = { karten: "Behalten", lesen: "Verstehen", fall: "Anwenden", streit: "Vertiefen", quiz: "Kontrolle" };
+const ART_ICON = { karten: IconKarten, micro: IconStart, lesen: IconBuch, fall: IconFaelle, streit: IconStreit, quiz: IconTraining };
+const ART_NAME = { karten: "Behalten", micro: "Kurz anwenden", lesen: "Verstehen", fall: "Anwenden", streit: "Vertiefen", quiz: "Kontrolle" };
 
 export default function Sitzung({ nav, gebiet, stufe, band }) {
   const daten = useMehrere(["definitionen", "probleme", "faelle", "rechtsstand"]);
@@ -21,6 +22,7 @@ export default function Sitzung({ nav, gebiet, stufe, band }) {
   const { stand: quizStand } = useQuizAntworten();
   const { karten: eigene } = useEigeneKarten();
   const [plan, setPlan] = useSpeicher("sitzung", null);
+  const [microStand] = useSpeicher("microcases", {});
   const [manuell, setManuell] = useState([]);
   const tag = HEUTE();
 
@@ -61,6 +63,8 @@ export default function Sitzung({ nav, gebiet, stufe, band }) {
       fallInfo: (id) => daten.faelle.faelle.find((f) => f.id === id),
       problemInfo: (id) => daten.probleme.probleme.find((x) => x.id === id),
       quizAnzahl: quizFuer(gebiet, stufe).length,
+      micro: microFuer(gebiet, stufe),
+      microStand,
       tag,
     });
     setPlan({
@@ -70,14 +74,14 @@ export default function Sitzung({ nav, gebiet, stufe, band }) {
       stufe,
       minuten,
       begonnen: Date.now(),
-      basis: { karten: kartenHeute(kartenStand, tag), quiz: quizAntworten(quizStand) },
+      basis: { karten: kartenHeute(kartenStand, tag), quiz: quizAntworten(quizStand), micro: microBearbeitet(microStand) },
     });
     setManuell([]);
   };
 
   if (!plan) return <Auswahl nav={nav} gebiet={gebiet} stufe={stufe} kompetenzen={kompetenzen} bauen={bauen} />;
 
-  const zustand = { gelesen, faelleStand, kartenStand, quizStand, basis: plan.basis, manuell, tag };
+  const zustand = { gelesen, faelleStand, kartenStand, quizStand, microStand, basis: plan.basis, manuell, tag };
   const schritte = plan.schritte.map((s) => ({ ...s, fertig: erledigt(s, zustand) }));
   const fertigN = schritte.filter((s) => s.fertig).length;
   const geschafft = schritte.filter((s) => s.fertig).reduce((a, s) => a + s.minuten, 0);
@@ -129,7 +133,7 @@ export default function Sitzung({ nav, gebiet, stufe, band }) {
                 ) : (
                   <>
                     <button className="btn btn--klein" onClick={() => nav(s.route)}>Start <IconPfeil /></button>
-                    {(s.art === "streit" || s.art === "quiz") && (
+                    {(s.art === "streit" || s.art === "quiz" || s.art === "micro") && (
                       <button className="btn btn--klein btn--geist" onClick={() => setManuell([...manuell, s.id])}>Erledigt</button>
                     )}
                   </>

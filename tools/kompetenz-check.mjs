@@ -9,6 +9,7 @@ import { QUIZ } from "../src/data/quiz.js";
 import { zuordnung } from "../src/lib/kompetenz.js";
 import { ERKLAERUNGEN } from "../src/data/erklaerungen.js";
 import { STREITBILDER } from "../src/data/streitbilder.js";
+import { MICROCASES, KLAUSUREN } from "../src/data/fallklassen.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -61,6 +62,30 @@ for (const b of STREITBILDER) {
   if (typeof b.herrschend !== "number" || !b.ansichten[b.herrschend]) warn(`Streitbild „${b.id}“: herrschende Ansicht nicht bestimmt`);
 }
 console.log(`Streitbilder: ${STREITBILDER.length} von ${probleme.probleme.length} Streitständen ausgearbeitet (${Math.round((STREITBILDER.length / probleme.probleme.length) * 100)} %)`);
+
+/* Microcases und Examensklausuren */
+const knotenAlle = new Set(KOMPETENZEN.map((k) => k.id));
+const microIds = new Set();
+for (const m of MICROCASES) {
+  if (!knotenAlle.has(m.k)) warn(`Microcase „${m.id}“ zeigt auf keine Kompetenz (${m.k})`);
+  if (microIds.has(m.id)) warn(`Microcase „${m.id}“ ist doppelt`);
+  microIds.add(m.id);
+  for (const feld of ["s", "a", "w"]) {
+    if (!m[feld] || m[feld].length < 20) warn(`Microcase „${m.id}“: Feld ${feld} fehlt oder ist zu kurz`);
+  }
+  if (!m.f || m.f.length < 12 || !m.f.includes("?")) warn(`Microcase „${m.id}“: Frage fehlt oder ist keine Frage`);
+  if ((m.s + " " + m.f).split(/\s+/).length > 90) warn(`Microcase „${m.id}“: Sachverhalt und Frage zusammen über 90 Wörter – das ist kein Microcase mehr`);
+}
+for (const k of KLAUSUREN) {
+  const summe = k.erwartungshorizont.reduce((a, x) => a + x.p, 0);
+  if (summe !== 100) warn(`Klausur „${k.id}“: Erwartungshorizont ergibt ${summe} statt 100 Punkte`);
+  if (!k.bearbeitervermerk || k.bearbeitervermerk.length < 60) warn(`Klausur „${k.id}“: Bearbeitervermerk fehlt oder ist zu kurz`);
+  const woerter = k.sachverhalt.split(/\s+/).length;
+  if (woerter < 200) warn(`Klausur „${k.id}“: Sachverhalt mit ${woerter} Wörtern zu knapp für eine Examensklausur`);
+  if (!k.fragen || !k.fragen.length) warn(`Klausur „${k.id}“: keine Fallfrage`);
+  if (!k.hinweise || k.hinweise.length < 2) warn(`Klausur „${k.id}“: weniger als zwei Hinweise`);
+}
+console.log(`Microcases: ${MICROCASES.length} · Examensklausuren: ${KLAUSUREN.length} (je 100 Punkte im Erwartungshorizont)`);
 
 /* Schema-IDs in kompetenzen.js müssen existieren */
 const schemaIds = new Set(SCHEMATA.map((s) => s.id));

@@ -3,18 +3,21 @@ import { useDaten, GEBIET_NAME, STUFE_NAME, abschnittFinden } from "../lib/daten
 import { useFaelleStand, useEigeneKarten, useLesezeichen, merkeZuletzt } from "../lib/fortschritt";
 import { werk } from "../lib/daten";
 import { Html, Kicker, Laden, Leer, Blaettern, passt } from "./Bausteine";
-import { IconSuche, IconZurueck, IconKarten, IconLesezeichen, IconAuge, IconHaken, IconShuffle } from "./Icons";
+import { IconSuche, IconZurueck, IconKarten, IconLesezeichen, IconAuge, IconHaken, IconShuffle, IconKlausur } from "./Icons";
+import Microcases from "./Microcases";
+import { microFuer, klausurenFuer } from "../data/fallklassen";
 
 export default function Faelle(props) {
   const faelle = useDaten("faelle");
   if (!faelle.daten) return <Laden text="Fälle werden geladen …" />;
-  return props.route.id ? <Fallansicht {...props} daten={faelle.daten} /> : <Fallliste {...props} daten={faelle.daten} />;
+  return props.route.id && props.route.id !== "micro" ? <Fallansicht {...props} daten={faelle.daten} /> : <Fallliste {...props} daten={faelle.daten} />;
 }
 
 const GRUPPEN = { A: "Standardfälle", B: "Standardfälle", C: "Standardfälle", D: "Aktenfälle", F: "Vertiefung" };
 
-function Fallliste({ nav, gebiet, stufe, daten }) {
+function Fallliste({ nav, gebiet, stufe, daten, route }) {
   const { stand } = useFaelleStand();
+  const [klasse, setKlasse] = useState(route?.id === "micro" ? "micro" : "uebung");
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("alle");
   const [gruppe, setGruppe] = useState("alle");
@@ -31,16 +34,28 @@ function Fallliste({ nav, gebiet, stufe, daten }) {
   const geloest = alle.filter((f) => stand[f.id]?.bewertung).length;
   const zufall = () => { const offen = alle.filter((f) => !stand[f.id]?.bewertung); const w = (offen.length ? offen : alle)[Math.floor(Math.random() * (offen.length ? offen : alle).length)]; if (w) nav({ ansicht: "faelle", id: w.id }); };
   const matrix = (daten.matrix || []).find((m) => m.gebiet === gebiet);
+  const mikro = microFuer(gebiet, stufe);
+  const examen = klausurenFuer(gebiet, stufe);
   return (
     <>
       <div className="pagehead">
         <div>
           <Kicker>{GEBIET_NAME[gebiet]} · {STUFE_NAME[stufe]}</Kicker>
           <h1>Fälle</h1>
-          <p className="lead">Jeder Fall hat vier Teile: Sachverhalt, Kernfragen, Lösungsskizze und Examenshinweis. Erst selbst lösen – die Lösung ist gesperrt, bis du sie aufdeckst. Danach bewertest du dich und der Fall wandert in dein Wiederholungssystem.</p>
+          <p className="lead">Drei Größen, weil drei verschiedene Fähigkeiten dahinterstehen: Der Microcase prüft, ob ein einzelner Punkt sitzt. Der Übungsfall verknüpft mehrere Probleme. Die Examensklausur zeigt, ob Sie unter Zeitdruck priorisieren können.</p>
         </div>
-        <span className="zaehler">{geloest} / {alle.length} gelöst</span>
+        <span className="zaehler">{geloest} / {alle.length} Übungsfälle gelöst</span>
       </div>
+
+      <div className="modus-wahl modus-wahl--schmal">
+        <button className="modus" aria-pressed={klasse === "micro"} onClick={() => setKlasse("micro")}><b>Microcases</b><span>2 Minuten · ein Problem</span><em>{mikro.length}</em></button>
+        <button className="modus" aria-pressed={klasse === "uebung"} onClick={() => setKlasse("uebung")}><b>Übungsfälle</b><span>15 bis 30 Minuten</span><em>{alle.length}</em></button>
+        <button className="modus" aria-pressed={klasse === "klausur"} onClick={() => nav({ ansicht: "klausur" })}><b>Examensklausuren</b><span>5 Stunden · mit Erwartungshorizont</span><em>{examen.length}</em></button>
+      </div>
+
+      {klasse === "micro" && <Microcases gebiet={gebiet} stufe={stufe} nav={nav} />}
+
+      {klasse === "uebung" && (<>
       <div className="suchfeld"><IconSuche /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Fallname, Klassiker, Thema oder Norm …" aria-label="Fälle durchsuchen" /><button className="btn btn--klein btn--linie" onClick={zufall}><IconShuffle /> Zufallsfall</button></div>
       <div className="filter">
         {[["alle", "Alle"], ["offen", "Noch offen"], ["fertig", "Gelöst"], ["schwer", "Nochmal üben"]].map(([id, l]) => <button key={id} aria-pressed={status === id} onClick={() => setStatus(id)}>{l}</button>)}
@@ -61,7 +76,9 @@ function Fallliste({ nav, gebiet, stufe, daten }) {
           })}
         </div>
       )}
-      {matrix && stufe === 1 && (
+      </>)}
+
+      {klasse === "uebung" && matrix && stufe === 1 && (
         <section className="abschnitt">
           <div className="abschnitt__kopf"><h2>Klassiker-Register: {matrix.titel}</h2><span className="zaehler">{matrix.zeilen.length} Fallanker</span></div>
           <div className="panel"><p className="lead" style={{ marginTop: 0, marginBottom: 12 }}>Die bekannten Fallnamen dienen als Gedächtnisanker. Gelernt wird nicht der Name, sondern die Problemkombination.</p>

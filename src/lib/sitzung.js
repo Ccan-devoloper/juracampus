@@ -25,7 +25,7 @@ export const BUDGETS = [
 
 /* Erfahrungswerte in Minuten. Bewusst großzügig: Ein Plan, der regelmäßig
    überzieht, wird als Gängelung erlebt. */
-export const DAUER = { karte: 0.5, fall: 14, streit: 3.5, quizfrage: 0.9 };
+export const DAUER = { karte: 0.5, micro: 2.5, fall: 14, streit: 3.5, quizfrage: 0.9 };
 
 const MAX_KARTENANTEIL = 0.45;
 const MIN_KARTEN = 5;
@@ -43,11 +43,12 @@ function bedarf(liste, name) {
 
 const rnd = (x) => Math.round(x * 10) / 10;
 
-export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, faelleStand, abschnittInfo, fallInfo, problemInfo, quizAnzahl = 0, tag = HEUTE() }) {
+export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, faelleStand, abschnittInfo, fallInfo, problemInfo, quizAnzahl = 0, micro = [], microStand = {}, tag = HEUTE() }) {
   const budget = Math.max(5, minuten);
   const kurz = budget <= 12;
   const dringend = [...kompetenzen].sort((a, b) => b.dringend - a.dringend);
   const karten = [];
+  const mikro = [];
   const lesen = [];
   const faelle = [];
   const streit = [];
@@ -63,7 +64,12 @@ export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, 
 
   /* In einer kurzen Sitzung darf der Stapel die ganze Zeit haben: Zehn Minuten
      auf vier Bausteine zu verteilen ergibt keine Sitzung, sondern Hektik. */
-  const kartenMax = Math.floor((budget * (kurz ? 0.92 : MAX_KARTENANTEIL)) / DAUER.karte);
+  /* In der kurzen Sitzung wird vorab Platz für ein bis zwei Microcases
+     reserviert – sonst bleibt es bei reinem Abfragen, und zehn Minuten sind
+     das einzige Zeitfenster, in dem viele Menschen überhaupt lernen. */
+  const microOffenKurz = micro.filter((m) => !microStand[m.id] || microStand[m.id].w < 3);
+  const microReserve = kurz && microOffenKurz.length ? Math.min(2, microOffenKurz.length) * DAUER.micro : 0;
+  const kartenMax = Math.floor(((budget - microReserve) * (kurz ? 0.95 : MAX_KARTENANTEIL)) / DAUER.karte);
   let kartenZiel = Math.min(faellig.length, kartenMax);
   /* Bleibt Platz im Kartenblock, wird er mit neuen Karten aufgefüllt – in einer
      kurzen Sitzung bis zum Anschlag, sonst behutsam. */
@@ -85,7 +91,26 @@ export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, 
     });
   }
 
-  if (kurz) return fertig([...karten], budget);
+  /* In der kurzen Sitzung ist nach den Karten noch Platz für ein, zwei
+     Microcases – sie sind das Einzige, was in zehn Minuten über die reine
+     Abfrage hinausgeht. */
+  if (kurz) {
+    const zahl = Math.min(microOffenKurz.length, Math.floor(rest / DAUER.micro));
+    if (zahl >= 1) {
+      const dauer = rnd(zahl * DAUER.micro);
+      rest -= dauer;
+      mikro.push({
+        id: "micro",
+        art: "micro",
+        titel: `${zahl} Microcase${zahl === 1 ? "" : "s"}`,
+        grund: "Ein Problem, eine Frage, sofortige Rückmeldung – das Einzige, was in zehn Minuten über reines Abfragen hinausgeht.",
+        minuten: dauer,
+        ziel: zahl,
+        route: { ansicht: "faelle", id: "micro" },
+      });
+    }
+    return fertig([...karten, ...mikro], budget);
+  }
 
   /* ------------------------------- 2. Restzeit nach Bedarf gewichten */
   const spitze = dringend.slice(0, 8);
@@ -109,6 +134,27 @@ export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, 
       minuten: dauer,
       ziel: fragen,
       route: { ansicht: "training", id: "quiz" },
+    });
+  }
+
+  /* Microcases als Brücke: Wer eine Kompetenz gelesen, aber nie angewandt hat,
+     bekommt zuerst zwei kurze Fälle – ein voller Übungsfall wäre der zweite
+     Schritt vor dem ersten. */
+  const microOffen = microOffenKurz;
+  const dringendeIds = new Set(dringend.slice(0, 6).map((k) => k.id));
+  const passend = microOffen.filter((m) => dringendeIds.has(m.k));
+  const microZahl = Math.min(passend.length ? passend.length : microOffen.length, Math.floor(Math.min(rest * 0.2, 3 * DAUER.micro) / DAUER.micro));
+  if (microZahl >= 2) {
+    const dauer = rnd(microZahl * DAUER.micro);
+    rest -= dauer;
+    mikro.push({
+      id: "micro",
+      art: "micro",
+      titel: `${microZahl} Microcases`,
+      grund: "Kurze Einzelprobleme aus den Kompetenzen mit dem größten Hebel – sie zeigen in zwei Minuten, ob ein Punkt sitzt, bevor er im großen Fall gebraucht wird.",
+      minuten: dauer,
+      ziel: microZahl,
+      route: { ansicht: "faelle", id: "micro" },
     });
   }
 
@@ -185,7 +231,7 @@ export function planen({ minuten, kompetenzen, kartenIds, kartenStand, gelesen, 
   for (const stueck of buendeln(roh)) lesen.push(stueck);
 
   /* Anzeigereihenfolge: aufwärmen, aufnehmen, anwenden, vertiefen, prüfen. */
-  return fertig([...karten, ...lesen, ...faelle, ...streit, ...quiz], budget);
+  return fertig([...karten, ...lesen, ...mikro, ...faelle, ...streit, ...quiz], budget);
 }
 
 /* Bündelt Abschnitte desselben Kapitels zu einem Leseschritt. */
@@ -244,14 +290,16 @@ function fertig(schritte, budget) {
 /* Ist ein Schritt erledigt? Wo möglich aus dem Lernstand abgeleitet statt
    abgehakt – eine Sitzung, die man selbst abhaken muss, hakt man irgendwann
    ohne zu lernen ab. */
-export function erledigt(schritt, { gelesen, faelleStand, kartenStand, quizStand, basis, manuell, tag = HEUTE() }) {
+export function erledigt(schritt, { gelesen, faelleStand, kartenStand, quizStand, microStand = {}, basis, manuell, tag = HEUTE() }) {
   if (manuell && manuell.includes(schritt.id)) return true;
   if (schritt.art === "lesen") return (schritt.ziele || [schritt.ziel]).every((id) => gelesen.has(id));
   if (schritt.art === "fall") return !!faelleStand[schritt.ziel]?.bewertung;
   if (schritt.art === "karten") return kartenHeute(kartenStand, tag) >= (basis.karten || 0) + schritt.ziel;
+  if (schritt.art === "micro") return microBearbeitet(microStand) >= (basis.micro || 0) + schritt.ziel;
   if (schritt.art === "quiz") return quizAntworten(quizStand) >= (basis.quiz || 0) + schritt.ziel;
   return false;
 }
 
 export const kartenHeute = (stand, tag = HEUTE()) => Object.values(stand).filter((k) => k.last === tag).length;
 export const quizAntworten = (stand) => Object.values(stand).reduce((s, q) => s + (q.richtig || 0) + (q.falsch || 0), 0);
+export const microBearbeitet = (stand) => Object.keys(stand || {}).length;
