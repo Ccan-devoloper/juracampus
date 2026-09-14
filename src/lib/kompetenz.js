@@ -205,6 +205,14 @@ export function zuordnung(gebiet, stufe, quellen) {
   return aus;
 }
 
+/* Welche Kompetenzen passen zu einem einzelnen Inhalt? Für Ansichten, die
+   keine vollständige Zuordnung brauchen (Lehrbuch, Streitstand, Fall) – sie
+   kostet sonst das Laden aller Datenchunks. */
+export function knotenFuer(gebiet, stufe, inhalt) {
+  const knoten = kompetenzenFuer(gebiet, stufe);
+  return besteKnoten(knoten, inhalt).map((id) => knoten.find((k) => k.id === id)).filter(Boolean);
+}
+
 /* --------------------------------------------------------- Beherrschung */
 
 /* Wie viel eine Fallbewertung wert ist. Die Selbstbewertung im Fallmodus ist

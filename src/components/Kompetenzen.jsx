@@ -6,6 +6,8 @@ import { zuordnung, beherrschungen, dringlichkeit, naechsterSchritt } from "../l
 import { STUFEN_NAMEN, kompetenzFinden } from "../data/kompetenzen";
 import { RELEVANZ } from "../data/relevanz";
 import { Kicker, Laden, Leer } from "./Bausteine";
+import Erklaerung from "./Erklaerung";
+import { hatErklaerung } from "../data/erklaerungen";
 import { IconPfeil, IconBuch, IconFaelle, IconKarten, IconTraining, IconStreit } from "./Icons";
 
 const NACHWEISE = [
@@ -151,6 +153,7 @@ export default function Kompetenzen({ nav, gebiet, stufe, band }) {
                   <p>{b.kurz}</p>
                 </div>
                 <div className="kompetenz__grad">
+                  {hatErklaerung(b.id) && <span className="tag" title="Erklärung in drei Stufen vorhanden">erklärt</span>}
                   <span className={`stufenpille stufenpille--${b.stufe.id}`}>{b.stufe.name}</span>
                   <em>{Math.round(b.grad * 100)}</em>
                 </div>
@@ -181,6 +184,7 @@ export default function Kompetenzen({ nav, gebiet, stufe, band }) {
 
               {auf && (
                 <div className="kompetenz__detail">
+                  {hatErklaerung(b.id) && <Erklaerung kompetenzId={b.id} />}
                   {b.decke < 1 && b.roh > b.decke && (
                     <p className="hinweiszeile">
                       Gedeckelt bei {Math.round(b.decke * 100)}: Sie haben {b.belegt} von vier Nachweisarten belegt.

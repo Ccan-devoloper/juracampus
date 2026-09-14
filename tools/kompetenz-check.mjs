@@ -7,6 +7,7 @@ import { KOMPETENZEN, kompetenzenFuer } from "../src/data/kompetenzen.js";
 import { SCHEMATA } from "../src/data/schemata.js";
 import { QUIZ } from "../src/data/quiz.js";
 import { zuordnung } from "../src/lib/kompetenz.js";
+import { ERKLAERUNGEN } from "../src/data/erklaerungen.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -21,6 +22,25 @@ const bandVon = (gebiet, stufe) => {
 
 let fehler = 0;
 const warn = (t) => { console.log("  ! " + t); fehler++; };
+
+/* Erklärungen müssen auf existierende Kompetenzen zeigen, und jede
+   hochrelevante Kompetenz sollte eine bekommen. */
+const knotenIds = new Set(KOMPETENZEN.map((k) => k.id));
+const erklaert = new Set();
+for (const e of ERKLAERUNGEN) {
+  if (!knotenIds.has(e.k)) warn(`Erklärung „${e.k}“ zeigt auf keine Kompetenz`);
+  if (erklaert.has(e.k)) warn(`Erklärung „${e.k}“ ist doppelt`);
+  erklaert.add(e.k);
+  for (const feld of ["kurz", "beispiel", "gegenbeispiel", "formulierung"]) {
+    if (!e[feld] || e[feld].length < 40) warn(`Erklärung „${e.k}“: Feld ${feld} fehlt oder ist zu kurz`);
+  }
+  if (!e.mittel || e.mittel.length < 3) warn(`Erklärung „${e.k}“: weniger als drei Schritte auf der mittleren Stufe`);
+  if (!e.vertiefung || e.vertiefung.length < 2) warn(`Erklärung „${e.k}“: weniger als zwei Vertiefungen`);
+  if (!e.fallen || e.fallen.length < 2) warn(`Erklärung „${e.k}“: weniger als zwei Fehlerfallen`);
+}
+const offeneHoch = KOMPETENZEN.filter((k) => k.relevanz === "hoch" && !erklaert.has(k.id));
+console.log(`\nErklärungen: ${ERKLAERUNGEN.length} · hochrelevante Kompetenzen ohne Erklärung: ${offeneHoch.length}`);
+if (offeneHoch.length) console.log("  offen: " + offeneHoch.map((k) => k.id).join(", "));
 
 /* Schema-IDs in kompetenzen.js müssen existieren */
 const schemaIds = new Set(SCHEMATA.map((s) => s.id));

@@ -806,6 +806,59 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
   .budget strong { font-size: 30px; }
 }
 
+/* -------------------------------------------------- Dreistufige Erklärung */
+.erklaerung { border: 1px solid var(--linie); border-radius: var(--rund); overflow: hidden; background: var(--papier); margin: 14px 0; }
+.erklaerung__stufen { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--feld); border-bottom: 1px solid var(--linie); }
+.erklaerung__stufe { border: 0; background: none; padding: 11px 14px; text-align: left; cursor: pointer; color: var(--ink-weich); border-bottom: 3px solid transparent; }
+.erklaerung__stufe b { display: block; font-size: 13px; color: var(--ink); }
+.erklaerung__stufe span { font-size: 11.5px; }
+.erklaerung__stufe[aria-selected="true"] { background: var(--papier); border-bottom-color: var(--marke); }
+.erklaerung__stufe[aria-selected="true"] b { color: var(--marke-text); }
+.erklaerung__inhalt { padding: 16px 18px; }
+.erklaerung__kurz { font-family: var(--serif); font-size: 16.5px; line-height: 1.62; margin: 0; }
+.erklaerung__schritte { list-style: none; counter-reset: es; margin: 0; padding: 0; display: grid; gap: 12px; }
+.erklaerung__schritte li { counter-increment: es; padding-left: 34px; position: relative; }
+.erklaerung__schritte li::before { content: counter(es); position: absolute; left: 0; top: 1px; width: 23px; height: 23px; border-radius: 99px; background: var(--marke-hell); color: var(--marke-text); font-family: var(--mono); font-size: 11.5px; display: grid; place-items: center; }
+.erklaerung__schritte strong { display: block; font-family: var(--serif); font-size: 15px; margin-bottom: 2px; }
+.erklaerung__schritte p { margin: 0; font-size: 14px; color: var(--ink-weich); line-height: 1.6; }
+
+.beispielpaar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.beispiel { border-radius: var(--rund-klein); padding: 12px 14px; border-left: 3px solid var(--linie); background: var(--feld); }
+.beispiel span { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 5px; }
+.beispiel p { margin: 0; font-size: 13.5px; line-height: 1.58; }
+.beispiel--ja { border-left-color: var(--gruen); background: var(--gruen-feld); }
+.beispiel--ja span { color: var(--gruen); }
+.beispiel--nein { border-left-color: var(--rot); background: var(--rot-feld); }
+.beispiel--nein span { color: var(--rot); }
+
+.formulierung { margin-top: 16px; border: 1px dashed var(--linie); border-radius: var(--rund-klein); padding: 12px 14px; }
+.formulierung__kopf { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.formulierung__kopf span { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-weich); }
+.formulierung blockquote { margin: 0; font-family: var(--serif); font-size: 15px; line-height: 1.6; border-left: 3px solid var(--marke); padding-left: 12px; }
+
+.fehlerfallen { margin-top: 16px; }
+.fehlerfallen h4 { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--rot); margin: 0 0 8px; }
+.fehlerfallen ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+.fehlerfallen li { border-left: 3px solid var(--rot); padding: 2px 0 2px 12px; }
+.fehlerfallen strong { display: block; font-size: 13.5px; }
+.fehlerfallen span { font-size: 13px; color: var(--ink-weich); line-height: 1.55; }
+
+.erklaerung__tief { display: grid; gap: 14px; }
+.vertiefung h4 { font-family: var(--serif); font-size: 15px; margin: 0 0 4px; display: flex; align-items: center; gap: 7px; }
+.vertiefung h4 svg { width: 15px; height: 15px; color: var(--marke-text); }
+.vertiefung p { margin: 0; font-size: 13.8px; color: var(--ink-weich); line-height: 1.6; }
+
+.erklaerungshinweis { display: inline-flex; align-items: center; gap: 7px; background: var(--marke-hell); color: var(--marke-text); border: 0; border-radius: 99px; padding: 6px 13px; font-size: 12.5px; cursor: pointer; }
+.erklaerungshinweis:hover { background: var(--marke); color: #fff; }
+.erklaerungshinweis svg { width: 14px; height: 14px; }
+
+@media (max-width: 760px) {
+  .erklaerung__stufen { grid-template-columns: 1fr; }
+  .erklaerung__stufe { border-bottom: 1px solid var(--linie); border-left: 3px solid transparent; }
+  .erklaerung__stufe[aria-selected="true"] { border-left-color: var(--marke); border-bottom-color: var(--linie); }
+  .beispielpaar { grid-template-columns: 1fr; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

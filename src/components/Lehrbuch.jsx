@@ -5,6 +5,9 @@ import { useSpeicher } from "../lib/speicher";
 import { relevanzFuer, RELEVANZ } from "../data/relevanz";
 import { SCHEMATA } from "../data/schemata";
 import { Html, Kicker, Laden, Leer, Blaettern, passt } from "./Bausteine";
+import Erklaerung from "./Erklaerung";
+import { knotenFuer } from "../lib/kompetenz";
+import { hatErklaerung } from "../data/erklaerungen";
 import { IconHaken, IconLesezeichen, IconNotiz, IconKarten, IconSuche, IconZurueck } from "./Icons";
 
 export default function Lehrbuch(props) {
@@ -132,6 +135,18 @@ function Kapitelansicht({ route, nav, gebiet, stufe, band }) {
     if (!probleme.daten || !normen.size) return [];
     return probleme.daten.probleme.filter((p) => p.gebiet === gebiet).map((p) => ({ p, n: (p.normen || []).filter((k) => normen.has(k)).length })).filter((x) => x.n >= 1).sort((a, b) => b.n - a.n).slice(0, 6).map((x) => x.p);
   }, [probleme.daten, normen, gebiet]);
+  /* Passt eine dreistufige Erklärung zu diesem Kapitel? Höchstens zwei, sonst
+     steht vor dem Text des Werks mehr Erklärung als Werk. */
+  const erklaerteKnoten = useMemo(() => {
+    if (!kapitel || !meta) return [];
+    return knotenFuer(gebiet, stufe, {
+      titel: meta.titel,
+      text: "",
+      normen: [...normen],
+      kapitelTitel: meta.titel,
+    }).filter((k) => hatErklaerung(k.id)).slice(0, 2);
+  }, [kapitel, meta, gebiet, stufe, normen]);
+
   const passendeSchemata = useMemo(() => SCHEMATA.filter((s) => s.gebiet === gebiet && s.stufe === stufe && (s.kapitel === route.id || (s.normen || []).some((n) => normen.has(n)))).slice(0, 5), [gebiet, stufe, route.id, normen]);
 
   if (!meta) return <Leer titel="Kapitel nicht gefunden"><button className="btn" onClick={() => nav({ ansicht: "lehrbuch" })}>Zur Kapitelübersicht</button></Leer>;
@@ -163,6 +178,21 @@ function Kapitelansicht({ route, nav, gebiet, stufe, band }) {
           <button className={`btn${alleGelesen ? " btn--gruen" : ""}`} onClick={allesUmschalten}>{alleGelesen ? "Kapitel gelesen ✓" : "Ganzes Kapitel abhaken"}</button>
         </div>
       </div>
+
+      {erklaerteKnoten.length > 0 && (
+        <section className="abschnitt" style={{ marginTop: 4 }}>
+          <div className="abschnitt__kopf">
+            <h2>Vorab verstehen</h2>
+            <span className="zaehler">Das Werk wiederholt – hier steht, was man vorher wissen muss</span>
+          </div>
+          {erklaerteKnoten.map((k) => (
+            <div key={k.id}>
+              <h3 style={{ fontFamily: "var(--serif)", fontSize: 16, margin: "10px 0 0" }}>{k.name}</h3>
+              <Erklaerung kompetenzId={k.id} />
+            </div>
+          ))}
+        </section>
+      )}
 
       <div className="lese">
         <div ref={inhaltRef}>
