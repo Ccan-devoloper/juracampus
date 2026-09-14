@@ -12,20 +12,21 @@ export const XP = {
   definition: 3,
 };
 
+/* Kompetenzstufen statt Ausbildungsbiografie. Die frühere Leiter begann mit
+   „Erstsemester" und endete im Richteramt – im Referendariat war das semantisch
+   falsch, weil dort niemand bei „Erstsemester" anfängt. Die Stufen beschreiben
+   deshalb den Beherrschungsgrad und gelten in beiden Examensphasen gleich. */
 export const LEVEL = [
-  { ab: 0, name: "Erstsemester" },
-  { ab: 120, name: "Grundstudium" },
-  { ab: 350, name: "Zwischenprüfung" },
-  { ab: 700, name: "Hauptstudium" },
-  { ab: 1200, name: "Schwerpunkt" },
-  { ab: 1900, name: "Repetitorium" },
-  { ab: 2800, name: "Examensreif" },
-  { ab: 4000, name: "Prädikatskurs" },
-  { ab: 5500, name: "Referendariat" },
-  { ab: 7500, name: "Assessorexamen" },
-  { ab: 10000, name: "Volljurist:in" },
-  { ab: 14000, name: "Richterbank" },
-  { ab: 20000, name: "Präsident:in des BGH" },
+  { ab: 0, name: "Grundlagen" },
+  { ab: 150, name: "Orientierung" },
+  { ab: 400, name: "Aufbau" },
+  { ab: 800, name: "Sicher im Schema" },
+  { ab: 1400, name: "Fallfest" },
+  { ab: 2200, name: "Streitstandsicher" },
+  { ab: 3200, name: "Klausurreif" },
+  { ab: 4500, name: "Examensreif" },
+  { ab: 6500, name: "Prädikatsniveau" },
+  { ab: 9000, name: "Souverän" },
 ];
 
 export function stand() {

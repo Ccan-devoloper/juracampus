@@ -9,15 +9,15 @@ const GEBIETE = [
 ];
 
 const FEATURES = [
-  { Icon: IconBuch, titel: "Lehrbuch in neun Bänden", text: "Systematisch von der Methodik bis zur Endkontrolle vor Abgabe. Jedes Normzitat ist anklickbar und führt zu allen Fundstellen im Werk." },
+  { Icon: IconBuch, titel: "Lehrbuch in sechs Fachbänden", text: "Systematisch von der Methodik bis zur Endkontrolle vor Abgabe. Jedes Normzitat ist anklickbar und führt zu allen Fundstellen im Werk." },
   { Icon: IconSchema, titel: "Prüfungsschemata", text: "Die Aufbauschemata beider Examina mit Normen, Merksätzen und einem Trainer, der die Reihenfolge abfragt." },
   { Icon: IconStreit, titel: "Streitstände", text: "227 Meinungsstreite kompakt: Problem, Ansichten, Argumente, Stellungnahme – mit hervorgehobener h. M. und Rechtsprechung." },
   { Icon: IconFaelle, titel: "Fälle mit Lösungsskizze", text: "Klassiker und Examenskombinationen als Sachverhalt, Kernfragen, Lösungsskizze und Examenshinweis. Erst selbst lösen, dann vergleichen." },
-  { Icon: IconKarten, titel: "Karteikarten mit System", text: "Definitionen, Streitstände, Fälle, Schemata und Normen als Karten – wiederholt nach dem SM-2-Algorithmus genau dann, wenn Vergessen droht." },
+  { Icon: IconKarten, titel: "Karteikarten mit System", text: "Definitionen, Streitstände, Fälle, Schemata und Normen als Karten – wiederholt genau dann, wenn Vergessen droht." },
   { Icon: IconKlausur, titel: "Klausurmodus und Lernplan", text: "Fälle unter Zeitdruck mit gesperrter Lösung, Selbstbewertung und Auswertung. Ein Lernplan verteilt den Stoff bis zum Examenstermin." },
-  { Icon: IconAktuell, titel: "Rechtsstand 2026", text: "Beck-online-validiert zum 13. September 2026: Sperrliste veralteter Zahlen und Normen, Hinweise zu MoPeG, Art. 94 GG, § 477 BGB, Recht auf Reparatur." },
+  { Icon: IconAktuell, titel: "Rechtsstand 2026", text: "Redaktioneller Rechtsstand 13. September 2026 mit offengelegter Methodik: Sperrliste veralteter Zahlen und Normen, Hinweise zu MoPeG, Art. 94 GG, § 477 BGB und dem Recht auf Reparatur." },
   { Icon: IconRegister, titel: "Normenregister und Lexikon", text: "Über 800 Einzelnormen mit Fundstellen und 2.300 Fachbegriffe – jedes Wort im Werk in einer Sekunde gefunden." },
-  { Icon: IconPlan, titel: "Motivation, die trägt", text: "Tagesziel, Streak, Level und Erfahrungspunkte machen sichtbar, was heute geschafft ist. Ohne Konto, alles bleibt auf deinem Gerät." },
+  { Icon: IconPlan, titel: "Motivation, die trägt", text: "Tagesziel, Streak und Kompetenzstufen von „Grundlagen“ bis „Examensreif“ machen sichtbar, was heute geschafft ist. Ohne Konto, alles bleibt auf deinem Gerät." },
 ];
 
 export default function Start({ nav, dunkel, setDunkel }) {
@@ -34,7 +34,7 @@ export default function Start({ nav, dunkel, setDunkel }) {
 
       <div className="start__hero" style={{ marginTop: 34 }}>
         <div>
-          <span className="kicker">Stand 13. September 2026 · Beck-online-validiert</span>
+          <span className="kicker">Redaktioneller Stand 13. September 2026</span>
           <h1>Das ganze Examen. <em>Ein Campus.</em></h1>
           <p className="lead">Lehrbuch, Schemata, Streitstände, Fälle, Karteikarten und Klausurtraining für beide juristischen Staatsexamina – aufgebaut wie ein guter Repetitor arbeitet: erst verstehen, dann anwenden, dann wiederholen.</p>
           <div className="knopfreihe" style={{ marginTop: 20 }}>

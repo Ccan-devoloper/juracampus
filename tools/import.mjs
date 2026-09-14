@@ -296,7 +296,16 @@ function kapitelAusEreignissen(band, evs, cfg) {
   return kapitel;
 }
 
-const werk = { stand, baende: [], gesetze: GESETZE };
+/* `stand` ist die Selbstaussage des Quellwerks („Beck-online-Nachvalidierung …").
+   Sie wird als Herkunftsangabe aufbewahrt, aber nicht als eigene Zusicherung
+   ausgegeben: Was JuraCampus selbst verantwortet, ist der redaktionelle Abgleich
+   gegen die amtlichen Gesetzestexte zum genannten Stichtag. */
+const werk = {
+  stand: "Redaktioneller Rechtsstand: 13. September 2026.",
+  standQuelle: stand,
+  baende: [],
+  gesetze: GESETZE,
+};
 
 for (const band of baende.filter((b) => BAENDE[b.nr])) {
   const cfg = BAENDE[band.nr];

@@ -166,7 +166,7 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
           </div>
           <button className="kachel" style={{ marginTop: 12, width: "100%" }} onClick={() => nav({ global: "rechtsstand" })}>
             <b><IconAktuell /> Rechtsstand 2026</b>
-            <strong>Beck-online-validiert zum 13. September 2026</strong>
+            <strong>Redaktioneller Stand 13. September 2026</strong>
             <p>Sperrliste veralteter Zahlen und Normen: § 23 GVG 10.000 Euro, § 511 ZPO 1.000 Euro, Art. 94 GG, MoPeG, § 477 BGB, Recht auf Reparatur.</p>
           </button>
         </section>
