@@ -31,7 +31,10 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
 - **Prüfungsschemata**: 84 Aufbauschemata beider Examina mit Normen, Unterpunkten und
   Merksatz; Trainer für die Reihenfolge; Verknüpfung mit dem Lehrbuchkapitel.
 - **Streitstände**: 227 Einzelprobleme (Band 8) mit hervorgehobener h. M., Gegenansicht,
-  Rechtsprechung und Streitpunkt, verwandten Fällen und Problemen.
+  Rechtsprechung und Streitpunkt, verwandten Fällen und Problemen. 49 davon sind Schritt für
+  Schritt ausgearbeitet: Problemtrigger, Streitfrage in einem Satz, jede Ansicht mit tragenden
+  Argumenten *und* Gegenargumenten, Rechtsprechung, Entscheidungserheblichkeit („wann macht
+  der Streit überhaupt einen Unterschied?“) und Klausurformulierung mit Fundstelle.
 - **Fälle**: 249 Fälle (Band 9) als Sachverhalt → Kernfragen → eigene Lösungsskizze →
   gesperrte Lösungsskizze → Examenshinweis → Selbstbewertung; Klassiker-Register.
 - **Karteikarten** mit FSRS-Wiederholung aus Definitionen, Streitständen, Fällen, Schemata,
@@ -93,6 +96,7 @@ src/
     relevanz.js         Examensrelevanz je Kapitel (redaktionelle Einschätzung)
     kompetenzen.js      Kompetenzknoten mit Normen, Kapitel-Regex, Stichworten, Verwechslungen
     erklaerungen.js     Dreistufige Erklärungen je Kompetenz (handgeschrieben)
+    streitbilder.js     Streitstände im Achtschritt-Modell (handgeschrieben)
 ```
 
 ## Designsystem

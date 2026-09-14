@@ -3,6 +3,8 @@ import { useDaten, GEBIET_NAME, STUFE_NAME } from "../lib/daten";
 import { useEigeneKarten, useLesezeichen, useNotizen, merkeZuletzt } from "../lib/fortschritt";
 import { Html, hervorheben, Kicker, Laden, Leer, Blaettern, passt } from "./Bausteine";
 import { IconSuche, IconZurueck, IconKarten, IconLesezeichen, IconNotiz } from "./Icons";
+import Streitbild from "./Streitbild";
+import { hatStreitbild } from "../data/streitbilder";
 
 export default function Streit(props) {
   const probleme = useDaten("probleme");
@@ -13,29 +15,32 @@ export default function Streit(props) {
 function Problemliste({ nav, gebiet, stufe, daten }) {
   const [q, setQ] = useState("");
   const [bereich, setBereich] = useState("alle");
+  const [nurAusgearbeitet, setNurAusgearbeitet] = useState(false);
   const alle = useMemo(() => daten.probleme.filter((p) => p.gebiet === gebiet && p.stufe === stufe), [daten, gebiet, stufe]);
   const bereiche = useMemo(() => [...new Set(alle.map((p) => p.bereich))], [alle]);
-  const liste = alle.filter((p) => (bereich === "alle" || p.bereich === bereich) && passt(`${p.titel} ${p.text}`, q));
+  const ausgearbeitet = alle.filter((p) => hatStreitbild(p.id)).length;
+  const liste = alle.filter((p) => (bereich === "alle" || p.bereich === bereich) && (!nurAusgearbeitet || hatStreitbild(p.id)) && passt(`${p.titel} ${p.text}`, q));
   return (
     <>
       <div className="pagehead">
         <div>
           <Kicker>{GEBIET_NAME[gebiet]} · {STUFE_NAME[stufe]}</Kicker>
           <h1>Streitstände und Einzelprobleme</h1>
-          <p className="lead">Meinungsstreite gehören an die Stelle des Schemas, an der sie entscheidungserheblich werden: Problem benennen, Ansichten mit tragenden Argumenten, Stellungnahme nur bei unterschiedlichen Ergebnissen – dann konsequent weiterprüfen.</p>
+          <p className="lead">Meinungsstreite gehören an die Stelle des Schemas, an der sie entscheidungserheblich werden: Problem benennen, Ansichten mit tragenden Argumenten, Stellungnahme nur bei unterschiedlichen Ergebnissen – dann konsequent weiterprüfen. {ausgearbeitet > 0 && `${ausgearbeitet} Streitstände sind Schritt für Schritt ausgearbeitet – mit Problemtrigger, Argumenten beider Seiten, Entscheidungserheblichkeit und Klausurformulierung.`}</p>
         </div>
         <span className="zaehler">{liste.length} von {alle.length}</span>
       </div>
       <div className="suchfeld"><IconSuche /><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Problem, Stichwort oder Norm suchen …" aria-label="Streitstände durchsuchen" /></div>
       <div className="filter">
         <button aria-pressed={bereich === "alle"} onClick={() => setBereich("alle")}>Alle Bereiche</button>
+        {ausgearbeitet > 0 && <button aria-pressed={nurAusgearbeitet} onClick={() => setNurAusgearbeitet(!nurAusgearbeitet)}>Nur ausgearbeitete ({ausgearbeitet})</button>}
         {bereiche.map((b) => <button key={b} aria-pressed={bereich === b} onClick={() => setBereich(b)}>{b}</button>)}
       </div>
       {liste.length === 0 ? <Leer titel="Kein Streitstand gefunden" text="Andere Suchbegriffe probieren." /> : (
         <div className="problemliste">
           {liste.map((p) => (
             <button key={p.id} className="problem" onClick={() => nav({ ansicht: "streit", id: p.id })}>
-              <strong>{p.titel}</strong>
+              <strong>{p.titel}{hatStreitbild(p.id) && <span className="tag tag--gruen" style={{ marginLeft: 8, verticalAlign: "middle" }}>ausgearbeitet</span>}</strong>
               <small>{p.nr} · {p.bereich}</small>
               <p>{p.text.slice(0, 180)}{p.text.length > 180 ? " …" : ""}</p>
             </button>
@@ -86,7 +91,18 @@ function Problemansicht({ route, nav, gebiet, stufe, daten }) {
           <button className={`btn${hat(karteId) ? " btn--gruen" : ""}`} disabled={hat(karteId)} onClick={() => hinzufuegen({ id: karteId, typ: "problem", gebiet: p.gebiet, stufe: p.stufe, frage: `Streitstand: ${p.titel} – Welche Ansichten werden vertreten und wie ist zu entscheiden?`, antwortHtml: p.html, quelle: { titel: p.titel, route: { gebiet: p.gebiet, stufe: p.stufe, ansicht: "streit", id: p.id } } })}><IconKarten /> {hat(karteId) ? "Auf dem Stapel" : "Auf den Kartenstapel"}</button>
         </div>
       </div>
-      <section className="panel">
+      {hatStreitbild(p.id) && (
+        <section className="panel">
+          <div className="panel__head">
+            <h2>Der Streit Schritt für Schritt</h2>
+            <span className="zaehler">Trigger · Frage · Ansichten · Rechtsprechung · Erheblichkeit · Formulierung</span>
+          </div>
+          <Streitbild id={p.id} />
+        </section>
+      )}
+
+      <section className="panel" style={{ marginTop: hatStreitbild(p.id) ? 14 : 0 }}>
+        {hatStreitbild(p.id) && <div className="panel__head"><h3>Fassung des Werks</h3><span className="zaehler">Kompaktversion zum Wiederholen</span></div>}
         <Html html={hervorheben(p.html)} nav={nav} />
         <div className="tz__fuss">
           <span className="tag tag--gruen">h. M. / Rechtsprechung</span><span className="tag tag--orange">Gegenansicht</span><span className="tag tag--lila">Gerichte</span><span className="tag tag--rot">Streitpunkt</span>

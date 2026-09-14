@@ -8,6 +8,7 @@ import { SCHEMATA } from "../src/data/schemata.js";
 import { QUIZ } from "../src/data/quiz.js";
 import { zuordnung } from "../src/lib/kompetenz.js";
 import { ERKLAERUNGEN } from "../src/data/erklaerungen.js";
+import { STREITBILDER } from "../src/data/streitbilder.js";
 
 const lies = (n) => JSON.parse(readFileSync(`src/data/${n}.json`, "utf8"));
 const werk = lies("werk");
@@ -41,6 +42,25 @@ for (const e of ERKLAERUNGEN) {
 const offeneHoch = KOMPETENZEN.filter((k) => k.relevanz === "hoch" && !erklaert.has(k.id));
 console.log(`\nErklärungen: ${ERKLAERUNGEN.length} · hochrelevante Kompetenzen ohne Erklärung: ${offeneHoch.length}`);
 if (offeneHoch.length) console.log("  offen: " + offeneHoch.map((k) => k.id).join(", "));
+
+/* Streitbilder müssen auf existierende Streitstände zeigen und vollständig sein. */
+const problemIds = new Set(probleme.probleme.map((p) => p.id));
+const gesehen = new Set();
+for (const b of STREITBILDER) {
+  if (!problemIds.has(b.id)) warn(`Streitbild „${b.id}“ zeigt auf keinen Streitstand`);
+  if (gesehen.has(b.id)) warn(`Streitbild „${b.id}“ ist doppelt`);
+  gesehen.add(b.id);
+  for (const feld of ["frage", "trigger", "erheblich", "formulierung"]) {
+    if (!b[feld] || b[feld].length < 40) warn(`Streitbild „${b.id}“: Feld ${feld} fehlt oder ist zu kurz`);
+  }
+  if (!b.ansichten || b.ansichten.length < 2) warn(`Streitbild „${b.id}“: weniger als zwei Ansichten`);
+  for (const a of b.ansichten || []) {
+    if (!a.pro || !a.pro.length) warn(`Streitbild „${b.id}“: Ansicht „${a.name}“ ohne Argument dafür`);
+    if (!a.contra || !a.contra.length) warn(`Streitbild „${b.id}“: Ansicht „${a.name}“ ohne Gegenargument`);
+  }
+  if (typeof b.herrschend !== "number" || !b.ansichten[b.herrschend]) warn(`Streitbild „${b.id}“: herrschende Ansicht nicht bestimmt`);
+}
+console.log(`Streitbilder: ${STREITBILDER.length} von ${probleme.probleme.length} Streitständen ausgearbeitet (${Math.round((STREITBILDER.length / probleme.probleme.length) * 100)} %)`);
 
 /* Schema-IDs in kompetenzen.js müssen existieren */
 const schemaIds = new Set(SCHEMATA.map((s) => s.id));
