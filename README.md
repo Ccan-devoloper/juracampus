@@ -11,6 +11,11 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
   1. und 2. Examen): 273 Kapitel, 692 Abschnitte mit Textziffern, Lesezeit,
   Examensrelevanz-Marker, Abhaken, Notizen, Lesezeichen, Schriftgröße, Druck. Jedes Normzitat
   ist anklickbar und zeigt alle Fundstellen im Werk (Norm-Popover).
+- **Dreistufige Erklärungen** zu allen 60 hochrelevanten Kompetenzen: 30 Sekunden
+  („Worum geht es?“), 3 bis 5 Minuten („Wie prüfe ich das?“), Vertiefung („Was macht die gute
+  Klausur aus?“) – dazu je ein Beispiel, ein Gegenbeispiel, eine kopierbare Klausurformulierung
+  und die typischen Fehler samt Begründung. Rund 33.600 Wörter, die das Quellwerk als
+  Wiederholungswerk nicht leisten kann und auch nicht leisten will.
 - **Lernsitzung** („Ich habe jetzt X Minuten“): 10, 25, 45 oder 90 Minuten – daraus baut die
   Seite einen konkreten Plan aus dem Lernstand. Fällige Karten zuerst (gedeckelt, damit nicht
   jeder Abend ein Karteikartenabend wird), die Restzeit dorthin, wo der Nachweis am dünnsten
@@ -76,8 +81,8 @@ src/
   lib/                  router, daten (Lazy-Loading), speicher, fortschritt, xp, wiederholung,
                         karten, kompetenz (Zuordnung und Beherrschungsgrad),
                         sitzung (adaptive Tagesplanung)
-  components/           Start, Cockpit, Sitzung, Kompetenzen, Lehrbuch, Schemata, Streit, Faelle,
-                        Karten, Training,
+  components/           Start, Cockpit, Sitzung, Kompetenzen, Erklaerung, Lehrbuch, Schemata,
+                        Streit, Faelle, Karten, Training,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
@@ -87,6 +92,7 @@ src/
     normenquiz.js       Norm ↔ Inhalt für Trainer und Karten
     relevanz.js         Examensrelevanz je Kapitel (redaktionelle Einschätzung)
     kompetenzen.js      Kompetenzknoten mit Normen, Kapitel-Regex, Stichworten, Verwechslungen
+    erklaerungen.js     Dreistufige Erklärungen je Kompetenz (handgeschrieben)
 ```
 
 ## Designsystem
