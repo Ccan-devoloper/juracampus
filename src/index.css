@@ -776,6 +776,36 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
 .kompetenzzeile span.mini i { display: block; height: 100%; background: var(--marke); }
 .kompetenzzeile em { font-family: var(--mono); font-style: normal; font-size: 11px; color: var(--ink-weich); }
 
+/* ------------------------------------------------------ Lernsitzung */
+.budgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+.budget { background: var(--papier); border: 0; border-radius: var(--rund); box-shadow: var(--schatten); padding: 22px 18px; text-align: left; cursor: pointer; display: grid; gap: 2px; border-left: 4px solid var(--marke); }
+.budget:hover { background: var(--marke-hell); }
+.budget strong { font-family: var(--display); font-size: 38px; line-height: 1; color: var(--marke-text); }
+.budget > span { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-weich); }
+.budget p { margin: 8px 0 0; font-size: 13px; color: var(--ink-weich); }
+
+.sitzungskopf { display: grid; gap: 14px; }
+.sitzungskopf__balken span { display: block; font-size: 12.5px; color: var(--ink-weich); margin-top: 7px; }
+
+.sitzungsliste { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; counter-reset: schritt; }
+.sitzungsschritt { display: grid; grid-template-columns: 34px 1fr auto; gap: 14px; align-items: start; background: var(--papier); border-radius: var(--rund); box-shadow: var(--schatten); padding: 15px 18px; border-left: 4px solid var(--linie); }
+.sitzungsschritt--dran { border-left-color: var(--marke); background: var(--marke-hell); }
+.sitzungsschritt--fertig { opacity: .62; border-left-color: var(--gruen); }
+.sitzungsschritt__nr { width: 28px; height: 28px; border-radius: 99px; display: grid; place-items: center; background: var(--feld); color: var(--ink-weich); font-family: var(--mono); font-size: 12px; }
+.sitzungsschritt--dran .sitzungsschritt__nr { background: var(--marke); color: #fff; }
+.sitzungsschritt--fertig .sitzungsschritt__nr { background: var(--gruen); color: #fff; }
+.sitzungsschritt__art { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-weich); }
+.sitzungsschritt__art svg { width: 14px; height: 14px; }
+.sitzungsschritt__text strong { display: block; font-family: var(--serif); font-size: 16px; margin: 3px 0 4px; }
+.sitzungsschritt__text p { margin: 0; font-size: 13px; color: var(--ink-weich); }
+.sitzungsschritt__aktion { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+
+@media (max-width: 760px) {
+  .sitzungsschritt { grid-template-columns: 28px 1fr; }
+  .sitzungsschritt__aktion { grid-column: 2; }
+  .budget strong { font-size: 30px; }
+}
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
 

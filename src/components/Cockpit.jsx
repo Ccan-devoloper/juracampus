@@ -96,7 +96,8 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
           <div><h2>{these.titel}</h2></div>
           <p>{these.text}</p>
           <div className="these__aktionen">
-            <button className="btn" onClick={weiter}>{letzte ? "Weiterlernen" : "Loslegen"} <IconPfeil /></button>
+            <button className="btn" onClick={() => nav({ ansicht: "sitzung" })}>Ich habe jetzt Zeit <IconPfeil /></button>
+            <button className="btn btn--linie" onClick={weiter}>{letzte ? "Weiterlernen" : "Loslegen"}</button>
             <button className="btn btn--linie" onClick={() => nav({ ansicht: "karten" })}>{faellig ? `${faellig} Karten fällig` : "Karteikarten"}</button>
             <button className="btn btn--linie" onClick={() => nav({ ansicht: "schemata" })}>Schemata</button>
           </div>

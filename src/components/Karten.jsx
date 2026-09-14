@@ -8,13 +8,18 @@ import { kartenBauen, KARTENTYPEN } from "../lib/karten";
 import { Html, Kicker, Laden, Leer } from "./Bausteine";
 import { IconAuge, IconKarten, IconShuffle } from "./Icons";
 
-export default function Karten({ nav, gebiet, stufe }) {
+export default function Karten({ nav, gebiet, stufe, route }) {
   const daten = useMehrere(["definitionen", "probleme", "faelle", "rechtsstand"]);
   const { stand, setzen } = useKartenStand();
   const { karten: eigene, entfernen } = useEigeneKarten();
   const [einst, setEinst] = useSpeicher("karten-einstellungen", { neuProTag: 15, typen: KARTENTYPEN.map((t) => t.id) });
+  /* Aus der Lernsitzung kommt die Route #/…/karten/los-20: direkt starten,
+     gedeckelt auf die geplante Kartenzahl. Sonst wird aus „20 Minuten" doch
+     wieder ein offener Karteikartenabend. */
+  const auftrag = /^los-(\d+)$/.exec(route?.id || "");
   const [nurFaellig, setNurFaellig] = useState(false);
-  const [aktiv, setAktiv] = useState(false);
+  const [aktiv, setAktiv] = useState(!!auftrag);
+  const deckel = auftrag ? Number(auftrag[1]) : null;
 
   const alle = useMemo(() => (daten ? kartenBauen({ gebiet, stufe, ...daten, eigene, typen: einst.typen }) : []), [daten, gebiet, stufe, eigene, einst.typen]);
   const heute = HEUTE();
@@ -29,9 +34,10 @@ export default function Karten({ nav, gebiet, stufe }) {
   const typUmschalten = (id) => setEinst({ ...einst, typen: einst.typen.includes(id) ? einst.typen.filter((t) => t !== id) : [...einst.typen, id] });
 
   if (aktiv) {
-    const ids = sitzung(alle.map((k) => k.id), stand, { neuMax: nurFaellig ? 0 : neuHeuteRest, faelligMax: 80 });
+    let ids = sitzung(alle.map((k) => k.id), stand, { neuMax: nurFaellig ? 0 : neuHeuteRest, faelligMax: 80 });
+    if (deckel) ids = ids.slice(0, deckel);
     const kartenMap = new Map(alle.map((k) => [k.id, k]));
-    return <Lernsitzung karten={ids.map((id) => kartenMap.get(id))} stand={stand} setzen={setzen} nav={nav} onEnde={() => setAktiv(false)} entfernen={entfernen} />;
+    return <Lernsitzung karten={ids.map((id) => kartenMap.get(id))} stand={stand} setzen={setzen} nav={nav} onEnde={() => { setAktiv(false); if (deckel) nav({ ansicht: "sitzung" }); }} entfernen={entfernen} auftrag={!!deckel} />;
   }
 
   const verteilung = KARTENTYPEN.map((t) => ({ ...t, n: alle.filter((k) => k.typ === t.id).length, f: faellig.filter((k) => k.typ === t.id).length }));
@@ -98,7 +104,7 @@ export default function Karten({ nav, gebiet, stufe }) {
   );
 }
 
-function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
+function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen, auftrag }) {
   const [i, setI] = useState(0);
   const [offen, setOffen] = useState(false);
   const [ergebnis, setErgebnis] = useState({ 1: 0, 2: 0, 3: 0, 4: 0 });
@@ -123,7 +129,7 @@ function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
           <strong>{gesamt === 0 ? "Keine Karten in dieser Sitzung" : "Karten wiederholt"}</strong>
           {gesamt > 0 && <p>{ergebnis[4]} leicht · {ergebnis[3]} gut · {ergebnis[2]} schwer · {ergebnis[1]} nochmal. Jede Karte kommt wieder, kurz bevor du sie vergisst.</p>}
           <div className="knopfreihe" style={{ justifyContent: "center", marginTop: 16 }}>
-            <button className="btn" onClick={onEnde}>Zurück zum Stapel</button>
+            <button className="btn" onClick={onEnde}>{auftrag ? "Zurück zur Lernsitzung" : "Zurück zum Stapel"}</button>
             <button className="btn btn--linie" onClick={() => nav({ ansicht: "cockpit" })}>Zum Cockpit</button>
           </div>
         </div>

@@ -11,6 +11,11 @@ einziges CSS-Designsystem, keine Konten, kein Backend – der Lernstand liegt im
   1. und 2. Examen): 273 Kapitel, 692 Abschnitte mit Textziffern, Lesezeit,
   Examensrelevanz-Marker, Abhaken, Notizen, Lesezeichen, Schriftgröße, Druck. Jedes Normzitat
   ist anklickbar und zeigt alle Fundstellen im Werk (Norm-Popover).
+- **Lernsitzung** („Ich habe jetzt X Minuten“): 10, 25, 45 oder 90 Minuten – daraus baut die
+  Seite einen konkreten Plan aus dem Lernstand. Fällige Karten zuerst (gedeckelt, damit nicht
+  jeder Abend ein Karteikartenabend wird), die Restzeit dorthin, wo der Nachweis am dünnsten
+  ist. Jeder Schritt nennt seinen Grund; erledigt wird aus dem Lernstand erkannt, nicht
+  abgehakt.
 - **Kompetenzen**: 103 Kompetenzknoten (Stellvertretung, objektive Zurechnung,
   Verfahrensrüge …) statt Prozentbalken. Jeder Knoten bekommt einen Beherrschungsgrad aus
   vier unabhängigen Nachweisen – gelesene Abschnitte (Verstehen), bewertete Fälle (Anwenden),
@@ -69,9 +74,10 @@ src/
   App.jsx               Shell: Kopfleiste, Rechtsgebiete, Examensstufe, Rail, Routing
   index.css             Designsystem (deutsche Farbtoken, Markenfarbe je Rechtsgebiet)
   lib/                  router, daten (Lazy-Loading), speicher, fortschritt, xp, wiederholung,
-                        karten, kompetenz (Zuordnung und Beherrschungsgrad)
-  components/           Start, Cockpit, Kompetenzen, Lehrbuch, Schemata, Streit, Faelle, Karten,
-                        Training,
+                        karten, kompetenz (Zuordnung und Beherrschungsgrad),
+                        sitzung (adaptive Tagesplanung)
+  components/           Start, Cockpit, Sitzung, Kompetenzen, Lehrbuch, Schemata, Streit, Faelle,
+                        Karten, Training,
                         Klausur, Lernplan, Normenregister, Lexikon, Rechtsstand, Suche,
                         Einstellungen, Bausteine, Icons
   data/
