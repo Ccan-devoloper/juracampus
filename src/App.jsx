@@ -6,11 +6,12 @@ import { stand as xpStand, streak, levelFuer } from "./lib/xp";
 import { NormPopover, XpToast, Laden } from "./components/Bausteine";
 import {
   IconCockpit, IconBuch, IconSchema, IconStreit, IconFaelle, IconKarten, IconTraining, IconKlausur, IconPlan,
-  IconRegister, IconLexikon, IconAktuell, IconSuche, IconSonne, IconMond, IconZurueck, IconPfeil, IconBlitz, IconEinstellungen, IconMehr,
+  IconRegister, IconLexikon, IconAktuell, IconSuche, IconPokal, IconSonne, IconMond, IconZurueck, IconPfeil, IconBlitz, IconEinstellungen, IconMehr,
 } from "./components/Icons";
 
 const Start = lazy(() => import("./components/Start"));
 const Cockpit = lazy(() => import("./components/Cockpit"));
+const Kompetenzen = lazy(() => import("./components/Kompetenzen"));
 const Lehrbuch = lazy(() => import("./components/Lehrbuch"));
 const Schemata = lazy(() => import("./components/Schemata"));
 const Streit = lazy(() => import("./components/Streit"));
@@ -27,6 +28,7 @@ const Einstellungen = lazy(() => import("./components/Einstellungen"));
 
 const ANSICHTEN = [
   { id: "cockpit", label: "Cockpit", Icon: IconCockpit, gruppe: "" },
+  { id: "kompetenzen", label: "Kompetenzen", Icon: IconPokal },
   { id: "lehrbuch", label: "Lehrbuch", Icon: IconBuch, gruppe: "Lernen" },
   { id: "schemata", label: "Schemata", Icon: IconSchema },
   { id: "streit", label: "Streitstände", Icon: IconStreit },
@@ -117,6 +119,7 @@ export default function App() {
     if (route.global === "einstellungen") return <Einstellungen route={route} nav={nav} dunkel={dunkel} setDunkel={setDunkel} />;
     const p = { route, nav, gebiet, stufe, band };
     switch (route.ansicht) {
+      case "kompetenzen": return <Kompetenzen {...p} />;
       case "lehrbuch": return <Lehrbuch {...p} />;
       case "schemata": return <Schemata {...p} />;
       case "streit": return <Streit {...p} />;
@@ -193,8 +196,8 @@ export default function App() {
       </main>
 
       <nav className="bottomnav" aria-label="Schnellnavigation">
-        {[ANSICHTEN[0], ANSICHTEN[1], ANSICHTEN[4], ANSICHTEN[5]].map((a) => (
-          <button key={a.id} aria-current={ansichtAktiv === a.id ? "true" : undefined} onClick={() => nav({ ansicht: a.id })}><a.Icon />{a.id === "karten" ? "Karten" : a.label}</button>
+        {["cockpit", "kompetenzen", "lehrbuch", "karten"].map((id) => ANSICHTEN.find((a) => a.id === id)).map((a) => (
+          <button key={a.id} aria-current={ansichtAktiv === a.id ? "true" : undefined} onClick={() => nav({ ansicht: a.id })}><a.Icon />{{ karten: "Karten", kompetenzen: "Können" }[a.id] || a.label}</button>
         ))}
         <MehrMenu nav={nav} aktiv={ansichtAktiv} />
       </nav>
@@ -229,7 +232,7 @@ function RailBox({ band, xp }) {
 
 function MehrMenu({ nav, aktiv }) {
   const [offen, setOffen] = useState(false);
-  const rest = [...ANSICHTEN.filter((a) => !["cockpit", "lehrbuch", "faelle", "karten"].includes(a.id)), ...GLOBAL.map((g) => ({ ...g, global: true })), { id: "einstellungen", label: "Einstellungen", Icon: IconEinstellungen, global: true }];
+  const rest = [...ANSICHTEN.filter((a) => !["cockpit", "kompetenzen", "lehrbuch", "karten"].includes(a.id)), ...GLOBAL.map((g) => ({ ...g, global: true })), { id: "einstellungen", label: "Einstellungen", Icon: IconEinstellungen, global: true }];
   return (
     <>
       <button aria-current={rest.some((r) => r.id === aktiv) ? "true" : undefined} onClick={() => setOffen(!offen)} aria-expanded={offen}><IconMehr />Mehr</button>

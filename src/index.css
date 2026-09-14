@@ -695,8 +695,104 @@ html[data-theme="dark"] .treffer__eintrag mark { color: #fff; }
 .dialog__box { width: min(560px, 100%); max-height: 90vh; overflow-y: auto; background: var(--papier); border-radius: var(--rund); box-shadow: var(--schatten-hoch); padding: 24px 26px; }
 .dialog__box h2 { font-size: 20px; margin-bottom: 10px; }
 
+/* --------------------------------------------------------- Kompetenzen */
+/* Sechs Beherrschungsstufen, von grau (unberührt) über die Markenfarbe bis
+   Grün (examensreif). Die Farbe trägt die Aussage, die Zahl bestätigt sie. */
+.profil { display: grid; grid-template-columns: auto 1fr auto; gap: 22px; align-items: center; }
+.profil__zahl { text-align: center; }
+.profil__zahl strong { display: block; font-family: var(--display); font-size: 40px; line-height: 1; color: var(--marke-text); }
+.profil__zahl span { font-size: 11.5px; color: var(--ink-weich); letter-spacing: .02em; }
+.profil__band { min-width: 0; }
+.profil__leiste { display: flex; height: 16px; border-radius: 99px; overflow: hidden; background: var(--feld); }
+.profil__teil { display: grid; place-items: center; font-size: 10.5px; font-family: var(--mono); color: #fff; min-width: 10px; }
+.profil__teil--offen { background: var(--linie); color: var(--ink-weich); }
+.profil__teil--angelesen { background: #9aa3b2; }
+.profil__teil--grundlagen { background: var(--orange); }
+.profil__teil--sicher { background: var(--marke); }
+.profil__teil--klausurreif { background: var(--marke-tief); }
+.profil__teil--examensreif { background: var(--gruen); }
+.profil__legende { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 9px; font-size: 12px; color: var(--ink-weich); }
+.profil__legende span { display: inline-flex; align-items: center; gap: 6px; }
+.punkt { width: 8px; height: 8px; border-radius: 99px; display: inline-block; background: var(--linie); }
+.punkt--angelesen { background: #9aa3b2; }
+.punkt--grundlagen { background: var(--orange); }
+.punkt--sicher { background: var(--marke); }
+.punkt--klausurreif { background: var(--marke-tief); }
+.punkt--examensreif { background: var(--gruen); }
+
+.modus-wahl--schmal { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.modus--pille { text-align: center; padding: 10px 14px; }
+
+.kompetenzliste { display: grid; gap: 12px; }
+.kompetenz { background: var(--papier); border-radius: var(--rund); box-shadow: var(--schatten); padding: 16px 18px; border-left: 4px solid var(--linie); }
+.kompetenz--angelesen { border-left-color: #9aa3b2; }
+.kompetenz--grundlagen { border-left-color: var(--orange); }
+.kompetenz--sicher { border-left-color: var(--marke); }
+.kompetenz--klausurreif { border-left-color: var(--marke-tief); }
+.kompetenz--examensreif { border-left-color: var(--gruen); }
+.kompetenz__kopf { display: flex; gap: 16px; align-items: flex-start; justify-content: space-between; }
+.kompetenz__titel h3 { font-family: var(--serif); font-size: 17px; margin: 0 0 3px; }
+.kompetenz__titel p { margin: 0; font-size: 13px; color: var(--ink-weich); }
+.kompetenz__grad { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.kompetenz__grad em { font-family: var(--display); font-style: normal; font-size: 22px; color: var(--ink); min-width: 34px; text-align: right; }
+.stufenpille { font-size: 11px; padding: 3px 9px; border-radius: 99px; background: var(--feld); color: var(--ink-weich); white-space: nowrap; }
+.stufenpille--grundlagen { background: var(--orange-feld, var(--feld)); color: var(--orange); }
+.stufenpille--sicher { background: var(--marke-hell); color: var(--marke-text); }
+.stufenpille--klausurreif { background: var(--marke-tief); color: #fff; }
+.stufenpille--examensreif { background: var(--gruen); color: #fff; }
+
+.nachweise { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 16px; margin: 14px 0 12px; }
+.nachweis { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; align-items: center; }
+.nachweis__label { font-size: 11.5px; color: var(--ink-weich); }
+.nachweis__wert { font-family: var(--mono); font-size: 11px; color: var(--ink-weich); }
+.nachweis__balken { grid-column: 1 / -1; height: 5px; border-radius: 99px; background: var(--feld); overflow: hidden; }
+.nachweis__balken i { display: block; height: 100%; background: var(--marke); border-radius: 99px; }
+.nachweis--leer { opacity: .4; }
+
+.kompetenz__fuss { display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap; border-top: 1px solid var(--linie); padding-top: 11px; }
+.schritt { margin: 0; font-size: 13px; color: var(--ink); display: inline-flex; align-items: center; gap: 7px; min-width: 220px; flex: 1; }
+.schritt svg { flex-shrink: 0; color: var(--marke-text); }
+.schritt--halten svg { color: var(--gruen); }
+
+.kompetenz__detail { margin-top: 14px; border-top: 1px solid var(--linie); padding-top: 12px; }
+.hinweiszeile { font-size: 12.5px; color: var(--ink-weich); background: var(--feld); border-radius: var(--rund-klein); padding: 9px 12px; margin: 0 0 10px; }
+.hinweiszeile--warnung { background: var(--rot-feld, var(--feld)); color: var(--rot); }
+.detailraster { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+.detailspalte h4 { font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-weich); margin: 0 0 6px; }
+.detailspalte h4 span { font-family: var(--mono); text-transform: none; letter-spacing: 0; }
+.detailspalte ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
+.detailspalte button { background: none; border: 0; padding: 2px 0; text-align: left; font-size: 12.5px; color: var(--marke-text); cursor: pointer; }
+.detailspalte button:hover { text-decoration: underline; }
+.detailspalte button.fertig { color: var(--ink-weich); text-decoration: line-through; }
+.detailspalte__leer { font-size: 12px; color: var(--ink-weich); margin: 0; }
+
+/* Kompetenzstreifen im Cockpit */
+.kompetenzstreifen { display: grid; gap: 8px; }
+.kompetenzzeile { display: grid; grid-template-columns: 1fr 80px auto; gap: 12px; align-items: center; background: none; border: 0; padding: 7px 0; text-align: left; cursor: pointer; border-bottom: 1px solid var(--linie); }
+.kompetenzzeile:last-child { border-bottom: 0; }
+.kompetenzzeile:hover strong { color: var(--marke-text); }
+.kompetenzzeile strong { font-size: 13.5px; font-weight: 600; }
+.kompetenzzeile span.mini { display: block; height: 5px; border-radius: 99px; background: var(--feld); overflow: hidden; }
+.kompetenzzeile span.mini i { display: block; height: 100%; background: var(--marke); }
+.kompetenzzeile em { font-family: var(--mono); font-style: normal; font-size: 11px; color: var(--ink-weich); }
+
 /* ------------------------------------------------------- Bottom-Nav */
 .bottomnav { display: none; }
+
+/* Kompetenzen auf kleinen Schirmen: vier Nachweise nebeneinander werden
+   unter ~700 px unleserlich, deshalb zwei Reihen zu zweit. */
+@media (max-width: 760px) {
+  .profil { grid-template-columns: 1fr; gap: 14px; text-align: left; }
+  .profil__zahl { display: flex; align-items: baseline; gap: 10px; text-align: left; }
+  .profil__zahl strong { font-size: 30px; }
+  .nachweise { grid-template-columns: 1fr 1fr; }
+  .kompetenz__kopf { flex-direction: column; gap: 8px; }
+  .kompetenz__grad { align-self: flex-start; }
+  .kompetenz__fuss { align-items: flex-start; }
+  .kompetenz__fuss .knopfreihe { width: 100%; }
+  .kompetenzzeile { grid-template-columns: 1fr auto; }
+  .kompetenzzeile span.mini { display: none; }
+}
 
 /* ------------------------------------------------------------ Responsiv */
 @media (max-width: 1100px) {

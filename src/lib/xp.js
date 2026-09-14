@@ -5,7 +5,7 @@ import { laden, sichern, heute } from "./speicher";
 export const XP = {
   abschnitt: (minuten) => Math.max(8, Math.min(40, Math.round(minuten * 4))),
   fall: (bewertung) => ({ 1: 15, 2: 25, 3: 35 }[bewertung] || 20),
-  karte: (q) => (q >= 5 ? 4 : q >= 3 ? 3 : 1),
+  karte: (g) => (g >= 4 ? 4 : g === 3 ? 3 : g === 2 ? 2 : 1),
   quiz: 6,
   schema: 20,
   klausur: 60,
@@ -13,7 +13,7 @@ export const XP = {
 };
 
 /* Kompetenzstufen statt Ausbildungsbiografie. Die frühere Leiter begann mit
-   „Erstsemester" und endete im Richteramt – im Referendariat war das semantisch
+   „Erstsemester“ und endete im Richteramt – im Referendariat war das semantisch
    falsch, weil dort niemand bei „Erstsemester" anfängt. Die Stufen beschreiben
    deshalb den Beherrschungsgrad und gelten in beiden Examensphasen gleich. */
 export const LEVEL = [

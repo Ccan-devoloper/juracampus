@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useMehrere, GEBIET_NAME, STUFE_NAME, fundstelleRoute } from "../lib/daten";
 import { useSpeicher } from "../lib/speicher";
-import { useKartenStand } from "../lib/fortschritt";
+import { useKartenStand, useQuizAntworten } from "../lib/fortschritt";
 import { bewerten } from "../lib/wiederholung";
 import { gutschreiben, XP } from "../lib/xp";
 import { quizFuer } from "../data/quiz";
@@ -63,6 +63,7 @@ export default function Training({ route, nav, gebiet, stufe }) {
 /* ------------------------------------------------------------- MC-Runde */
 function MCRunde({ fragen, titel, zaehlen, kartenIdFuer }) {
   const { stand, setzen } = useKartenStand();
+  const antwortstand = useQuizAntworten();
   const [seed, setSeed] = useState(() => Date.now());
   const runde = useMemo(() => mischen(fragen, seed).slice(0, 10).map((f) => ({ ...f, reihenfolge: mischen(f.optionen.map((_, i) => i), seed + f.optionen.length) })), [fragen, seed]);
   const [i, setI] = useState(0);
@@ -79,6 +80,7 @@ function MCRunde({ fragen, titel, zaehlen, kartenIdFuer }) {
     const richtig = opt === f.richtig;
     if (richtig) { setPunkte(punkte + 1); gutschreiben(XP.quiz, "Quizfrage richtig"); }
     zaehlen(richtig);
+    antwortstand.merken(f.id, richtig);
     if (kartenIdFuer && !richtig) { const kid = kartenIdFuer(f); if (kid) setzen(kid, bewerten(stand[kid], 1)); }
   };
   return (

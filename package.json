@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "import": "node tools/import.mjs",
-    "check": "node tools/pruefen.mjs"
+    "check": "node tools/pruefen.mjs && node tools/kompetenz-check.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

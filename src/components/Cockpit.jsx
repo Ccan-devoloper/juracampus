@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDaten, GEBIET_NAME, STUFE_NAME } from "../lib/daten";
-import { useGelesen, useFaelleStand, useKartenStand, zuletzt, anteil } from "../lib/fortschritt";
+import { useGelesen, useFaelleStand, useKartenStand, useQuizAntworten, zuletzt } from "../lib/fortschritt";
 import { stand as xpStand, streak as streakVon, levelFuer, heuteXp, verlauf, tagesziel } from "../lib/xp";
 import { HEUTE } from "../lib/wiederholung";
+import { zuordnung, beherrschungen, dringlichkeit, naechsterSchritt } from "../lib/kompetenz";
 import { useSpeicher } from "../lib/speicher";
 import { relevanzFuer, RELEVANZ } from "../data/relevanz";
 import { SCHEMATA } from "../data/schemata";
-import { Kicker, Ring } from "./Bausteine";
+import { Kicker } from "./Bausteine";
 import { IconFlamme, IconHaken, IconPfeil, IconAktuell } from "./Icons";
 
 const THESEN = {
@@ -22,8 +23,10 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
   const { menge: gelesen } = useGelesen();
   const { stand: faelleStand } = useFaelleStand();
   const { stand: kartenStand } = useKartenStand();
+  const { stand: quizStand } = useQuizAntworten();
   const faelle = useDaten("faelle");
   const probleme = useDaten("probleme");
+  const definitionen = useDaten("definitionen");
   const [ziel] = useSpeicher("tagesziel", 60);
   const [xp, setXp] = useState(() => xpStand());
   useEffect(() => {
@@ -44,6 +47,13 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
   const tagesProblem = campusProbleme.length ? campusProbleme[new Date().getDate() % campusProbleme.length] : null;
 
   const heute = HEUTE();
+  const kompetenzen = useMemo(() => {
+    if (!faelle.daten || !probleme.daten || !definitionen.daten) return null;
+    const zu = zuordnung(gebiet, stufe, { band, faelle: faelle.daten, probleme: probleme.daten, definitionen: definitionen.daten });
+    const b = beherrschungen(zu, { gelesen, faelle: faelleStand, karten: kartenStand, quiz: quizStand }, heute);
+    return b.map((x) => ({ ...x, dringend: dringlichkeit(x, kartenStand, heute), schritt: naechsterSchritt(x) }));
+  }, [faelle.daten, probleme.daten, definitionen.daten, gebiet, stufe, band, gelesen, faelleStand, kartenStand, quizStand, heute]);
+
   const faellig = Object.values(kartenStand).filter((k) => k.due && k.due <= heute).length;
   const gelernt = Object.keys(kartenStand).length;
   const heutePunkte = heuteXp(xp);
@@ -112,11 +122,41 @@ export default function Cockpit({ nav, gebiet, stufe, band }) {
         </section>
       </div>
 
-      <div className="raster raster--3" style={{ marginTop: 14 }}>
-        <section className="panel"><Ring p={anteil(gelesenN, alleAbschnitte.length)} titel="Lehrbuch" text={`${gelesenN} von ${alleAbschnitte.length} Abschnitten gelesen`} /></section>
-        <section className="panel"><Ring p={anteil(faelleGeloest, campusFaelle.length)} klasse="ring--faelle" titel="Fälle" text={faelle.daten ? `${faelleGeloest} von ${campusFaelle.length} Fällen gelöst` : "wird geladen …"} /></section>
-        <section className="panel"><Ring p={gelernt ? Math.round(((gelernt - faellig) / gelernt) * 100) : 0} klasse="ring--karten" zahl={faellig} titel="Karten fällig" text={`${gelernt} Karten im Wiederholungssystem`} /></section>
-      </div>
+      <section className="abschnitt" style={{ marginTop: 14 }}>
+        <div className="abschnitt__kopf">
+          <h2>Woran es gerade hängt</h2>
+          <button className="btn btn--klein btn--geist" onClick={() => nav({ ansicht: "kompetenzen" })}>Alle Kompetenzen <IconPfeil /></button>
+        </div>
+        {!kompetenzen && <p className="lead" style={{ fontSize: 14 }}>Kompetenzprofil wird berechnet …</p>}
+        {kompetenzen && (
+          <div className="raster raster--2">
+            <div className="panel">
+              <div className="panel__head"><h3>Fünf Kompetenzen mit dem größten Hebel</h3></div>
+              <div className="kompetenzstreifen">
+                {[...kompetenzen].sort((a, b) => b.dringend - a.dringend).slice(0, 5).map((k) => (
+                  <button key={k.id} className="kompetenzzeile" onClick={() => nav({ ansicht: "kompetenzen" })} title={k.schritt.text}>
+                    <span><strong>{k.name}</strong><span style={{ display: "block", fontSize: 12, color: "var(--ink-weich)" }}>{k.schritt.text}</span></span>
+                    <span className="mini"><i style={{ width: `${Math.round(k.grad * 100)}%` }} /></span>
+                    <em>{Math.round(k.grad * 100)}</em>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="panel">
+              <div className="panel__head"><h3>Profil</h3></div>
+              <p style={{ fontSize: 13.5, color: "var(--ink-weich)", margin: "0 0 12px" }}>
+                {kompetenzen.filter((k) => k.grad >= 0.78).length} von {kompetenzen.length} Kompetenzen sind klausurreif,
+                {" "}{kompetenzen.filter((k) => k.grad < 0.15).length} noch unberührt. Der Wert misst nicht, wie viel Sie
+                abgehakt haben, sondern wie viele unabhängige Nachweise für Können vorliegen.
+              </p>
+              <div className="stat"><span>Lehrbuch</span><b>{gelesenN} / {alleAbschnitte.length} Abschnitte</b></div>
+              <div className="stat"><span>Fälle</span><b>{faelle.daten ? `${faelleGeloest} / ${campusFaelle.length}` : "…"}</b></div>
+              <div className="stat"><span>Karten fällig</span><b>{faellig} von {gelernt}</b></div>
+              <div className="stat"><span>Mittlerer Beherrschungsgrad</span><b>{Math.round((kompetenzen.reduce((s, k) => s + k.grad, 0) / Math.max(1, kompetenzen.length)) * 100)}</b></div>
+            </div>
+          </div>
+        )}
+      </section>
 
       <section className="abschnitt">
         <div className="abschnitt__kopf"><h2>Heute dran</h2><span className="zaehler">Vier Bausteine, rund 30 Minuten</span></div>

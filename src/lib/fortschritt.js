@@ -32,12 +32,28 @@ export function useFaelleStand() {
   return { stand, bewerten, skizze };
 }
 
-/* Karteikarten-Zustand (SM-2) je Karten-ID. */
+/* Karteikarten-Zustand (FSRS: Stabilität, Schwierigkeit, Fälligkeit) je Karten-ID. */
 export function useKartenStand() {
   const [stand, setStand] = useSpeicher("karten", {});
   const setzen = useCallback((id, wert) => setStand((alt) => ({ ...alt, [id]: wert })), [setStand]);
   const entfernen = useCallback((id) => setStand((alt) => { const n = { ...alt }; delete n[id]; return n; }), [setStand]);
   return { stand, setzen, entfernen, setStand };
+}
+
+/* Quizantworten je Frage: { [frageId]: { richtig, falsch, letzte } }. Die
+   Trefferquote pro Frage ist die vierte Nachweisquelle des Kompetenzmodells –
+   die reine Gesamtbilanz im Training reicht dafür nicht, weil sie nicht sagt,
+   *wo* es hakt. */
+export function useQuizAntworten() {
+  const [stand, setStand] = useSpeicher("quiz-antworten", {});
+  const merken = useCallback((id, richtig) => {
+    if (!id) return;
+    setStand((alt) => {
+      const v = alt[id] || { richtig: 0, falsch: 0 };
+      return { ...alt, [id]: { richtig: v.richtig + (richtig ? 1 : 0), falsch: v.falsch + (richtig ? 0 : 1), letzte: heute() } };
+    });
+  }, [setStand]);
+  return { stand, merken, setStand };
 }
 
 /* Eigene Karteikarten (aus Abschnitten, Streitständen, Fällen „auf den Stapel gelegt“). */

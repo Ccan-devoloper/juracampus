@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useMehrere, GEBIET_NAME, STUFE_NAME, fundstelleRoute } from "../lib/daten";
 import { useKartenStand, useEigeneKarten } from "../lib/fortschritt";
 import { useSpeicher } from "../lib/speicher";
-import { bewerten, istFaellig, sitzung, STUFEN, vorschau, HEUTE } from "../lib/wiederholung";
+import { bewerten, sitzung, STUFEN, vorschau, HEUTE, kartenAbruf } from "../lib/wiederholung";
 import { gutschreiben, XP } from "../lib/xp";
 import { kartenBauen, KARTENTYPEN } from "../lib/karten";
 import { Html, Kicker, Laden, Leer } from "./Bausteine";
@@ -42,7 +42,7 @@ export default function Karten({ nav, gebiet, stufe }) {
         <div>
           <Kicker>{GEBIET_NAME[gebiet]} · {STUFE_NAME[stufe]}</Kicker>
           <h1>Karteikarten</h1>
-          <p className="lead">Definitionen, Streitstände, Fälle, Schemata, Normen und der Rechtsstand 2026 als Karten. Wiederholt wird nach dem SM-2-Algorithmus: Was du sicher weißt, kommt seltener; was wackelt, kommt bald wieder.</p>
+          <p className="lead">Definitionen, Streitstände, Fälle, Schemata, Normen und der Rechtsstand 2026 als Karten. Wiederholt wird nach FSRS: Das Verfahren schätzt für jede Karte getrennt, wie fest das Wissen sitzt und wie schwer der Stoff dir fällt, und legt die Wiederholung genau vor den Punkt, an dem du sie vergessen würdest.</p>
         </div>
         <span className="zaehler">{alle.length} Karten · {faellig.length} fällig · {neu.length} neu</span>
       </div>
@@ -84,7 +84,7 @@ export default function Karten({ nav, gebiet, stufe }) {
           <div className="panel">
             <h3>Einstellungen</h3>
             <label className="einstellung"><span>Neue Karten pro Tag</span><input type="number" min="0" max="100" value={einst.neuProTag} onChange={(e) => setEinst({ ...einst, neuProTag: Math.max(0, Math.min(100, Number(e.target.value) || 0)) })} /></label>
-            <p style={{ fontSize: 12.5, color: "var(--ink-weich)", marginTop: 8 }}>Tastatur in der Sitzung: <kbd>Leertaste</kbd> Antwort zeigen, <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> bewerten.</p>
+            <p style={{ fontSize: 12.5, color: "var(--ink-weich)", marginTop: 8 }}>Tastatur in der Sitzung: <kbd>Leertaste</kbd> Antwort zeigen, <kbd>1</kbd> bis <kbd>4</kbd> bewerten.</p>
           </div>
           {eigene.filter((k) => k.gebiet === gebiet && k.stufe === stufe).length > 0 && (
             <div className="panel">
@@ -101,27 +101,27 @@ export default function Karten({ nav, gebiet, stufe }) {
 function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
   const [i, setI] = useState(0);
   const [offen, setOffen] = useState(false);
-  const [ergebnis, setErgebnis] = useState({ 1: 0, 3: 0, 5: 0 });
+  const [ergebnis, setErgebnis] = useState({ 1: 0, 2: 0, 3: 0, 4: 0 });
   const karte = karten[i];
 
   useEffect(() => {
     const auf = (e) => {
       if (/input|textarea/i.test(document.activeElement?.tagName || "")) return;
       if (e.key === " " && !offen) { e.preventDefault(); setOffen(true); }
-      if (offen && ["1", "2", "3"].includes(e.key)) { e.preventDefault(); bewertung(STUFEN[Number(e.key) - 1].q); }
+      if (offen && ["1", "2", "3", "4"].includes(e.key)) { e.preventDefault(); bewertung(STUFEN[Number(e.key) - 1].g); }
     };
     window.addEventListener("keydown", auf);
     return () => window.removeEventListener("keydown", auf);
   });
 
   if (!karte) {
-    const gesamt = ergebnis[1] + ergebnis[3] + ergebnis[5];
+    const gesamt = ergebnis[1] + ergebnis[2] + ergebnis[3] + ergebnis[4];
     return (
       <div className="panel quiz">
         <div className="mitte">
           <span className="ergebnis-zahl">{gesamt}</span>
           <strong>{gesamt === 0 ? "Keine Karten in dieser Sitzung" : "Karten wiederholt"}</strong>
-          {gesamt > 0 && <p>{ergebnis[5]} leicht · {ergebnis[3]} schwer · {ergebnis[1]} nochmal. Die Karten kommen wieder, wenn Vergessen droht.</p>}
+          {gesamt > 0 && <p>{ergebnis[4]} leicht · {ergebnis[3]} gut · {ergebnis[2]} schwer · {ergebnis[1]} nochmal. Jede Karte kommt wieder, kurz bevor du sie vergisst.</p>}
           <div className="knopfreihe" style={{ justifyContent: "center", marginTop: 16 }}>
             <button className="btn" onClick={onEnde}>Zurück zum Stapel</button>
             <button className="btn btn--linie" onClick={() => nav({ ansicht: "cockpit" })}>Zum Cockpit</button>
@@ -134,7 +134,7 @@ function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
   const bewertung = (q) => {
     const neu = bewerten(stand[karte.id], q);
     setzen(karte.id, neu);
-    gutschreiben(XP.karte(q), q >= 5 ? "Karte gewusst" : q >= 3 ? "Karte wiederholt" : "Karte nochmal");
+    gutschreiben(XP.karte(q), q >= 4 ? "Karte sofort gewusst" : q === 3 ? "Karte gewusst" : q === 2 ? "Karte mit Mühe" : "Karte nochmal");
     setErgebnis((e) => ({ ...e, [q]: e[q] + 1 }));
     setOffen(false);
     setI(i + 1);
@@ -148,7 +148,7 @@ function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
       <div className={`karte${offen ? " karte--umgedreht" : ""}`} key={karte.id + (offen ? "-a" : "-f")}>
         <div className="karte__meta">
           <span>Karte {i + 1} von {karten.length} · {typ ? typ.label : karte.typ}</span>
-          <span>{s ? `${s.n}× gesehen · Intervall ${s.iv} Tag${s.iv === 1 ? "" : "e"}` : "neu"}</span>
+          <span>{s ? `${s.n}× gesehen · Stabilität ${Math.round(s.s ?? s.iv ?? 0)} Tage · Abruf ${Math.round(kartenAbruf(s) * 100)} %` : "neu"}</span>
         </div>
         <div className="karte__frage">
           <small>{typ ? typ.hinweis : ""}</small>
@@ -165,15 +165,16 @@ function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
         )}
         <div className="karte__steuerung">
           {!offen ? <button className="btn btn--gross" onClick={() => setOffen(true)}><IconAuge /> Antwort zeigen <small>Leertaste</small></button> : STUFEN.map((st, k) => (
-            <button key={st.q} className={`btn btn--${st.ton}`} onClick={() => bewertung(st.q)}>{st.label} <small>{vorschau(s, st.q)} T · {k + 1}</small></button>
+            <button key={st.g} className={`btn btn--${st.ton}`} onClick={() => bewertung(st.g)} title={`${st.hinweis} – nächste Wiederholung in ${vorschau(s, st.g)} Tagen`}>{st.label} <small>{vorschau(s, st.g)} T · {k + 1}</small></button>
           ))}
         </div>
       </div>
       <aside className="seitenstat">
         <div className="panel">
           <h3>Sitzung</h3>
-          <div className="stat"><span>Leicht</span><b>{ergebnis[5]}</b></div>
-          <div className="stat"><span>Schwer</span><b>{ergebnis[3]}</b></div>
+          <div className="stat"><span>Leicht</span><b>{ergebnis[4]}</b></div>
+          <div className="stat"><span>Gut</span><b>{ergebnis[3]}</b></div>
+          <div className="stat"><span>Schwer</span><b>{ergebnis[2]}</b></div>
           <div className="stat"><span>Nochmal</span><b>{ergebnis[1]}</b></div>
           <div className="stat"><span>Verbleibend</span><b>{karten.length - i}</b></div>
           <div className="knopfreihe" style={{ marginTop: 12 }}>
@@ -184,7 +185,7 @@ function Lernsitzung({ karten, stand, setzen, nav, onEnde, entfernen }) {
         </div>
         <div className="panel">
           <h3>So bewertest du</h3>
-          <p style={{ fontSize: 13, color: "var(--ink-weich)" }}><b>Leicht</b>: ohne Zögern gewusst – langes Intervall. <b>Schwer</b>: mit Mühe – kurzes Intervall. <b>Nochmal</b>: nicht gewusst – morgen wieder.</p>
+          <p style={{ fontSize: 13, color: "var(--ink-weich)" }}><b>Leicht</b>: sofort da. <b>Gut</b>: gewusst. <b>Schwer</b>: nur mit Mühe erinnert. <b>Nochmal</b>: nicht gewusst, morgen wieder. Die Unterscheidung zwischen „Schwer“ und „Gut“ ist der Kern des Verfahrens: Sie trennt sicheres Wissen von knapp Erinnertem.</p>
         </div>
       </aside>
     </div>
