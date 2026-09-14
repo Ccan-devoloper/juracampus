@@ -1,0 +1,22 @@
+{
+  "name": "juracampus",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "import": "node tools/import.mjs",
+    "check": "node tools/pruefen.mjs"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "cheerio": "^1.0.0",
+    "vite": "^5.4.19"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "JuraCampus – Lernplattform für das Staatsexamen",
+  "short_name": "JuraCampus",
+  "description": "Lehrbuch, Schemata, Fälle, Karteikarten und Klausurmodus für das 1. und 2. juristische Staatsexamen.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f2f5f7",
+  "theme_color": "#0c1b4d",
+  "lang": "de",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

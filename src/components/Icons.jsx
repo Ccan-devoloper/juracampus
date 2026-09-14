@@ -1,0 +1,34 @@
+import React from "react";
+
+const b = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true };
+
+export const IconCockpit = () => <svg {...b}><path d="M4 12h5v8H4zM10 4h4v16h-4zM15 9h5v11h-5z" /></svg>;
+export const IconBuch = () => <svg {...b}><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z" /><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20M8 7h8M8 10.5h6" /></svg>;
+export const IconSchema = () => <svg {...b}><rect x="9" y="3" width="6" height="4.5" /><rect x="2.5" y="16.5" width="6" height="4.5" /><rect x="15.5" y="16.5" width="6" height="4.5" /><path d="M12 7.5v4M5.5 16.5V11.5h13v5" /></svg>;
+export const IconStreit = () => <svg {...b}><path d="M12 3v18M5 7l-3 7a4 4 0 0 0 6 0zM19 7l-3 7a4 4 0 0 0 6 0zM5 7h14M9 21h6" /></svg>;
+export const IconFaelle = () => <svg {...b}><path d="M6 3h12v18H6zM9 7h6M9 11h6M9 15h4" /><path d="M3 6v15h12" /></svg>;
+export const IconKarten = () => <svg {...b}><rect x="3" y="6" width="14" height="12" rx="2" /><path d="M7 3h14v12M7 12h6" /></svg>;
+export const IconTraining = () => <svg {...b}><rect x="3" y="5" width="18" height="15" rx="2" /><path d="M8 3v4M16 3v4M8 13l2.5 2.5L16 10" /></svg>;
+export const IconKlausur = () => <svg {...b}><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2M9 2h6" /></svg>;
+export const IconPlan = () => <svg {...b}><rect x="3" y="4" width="18" height="17" rx="2" /><path d="M3 9h18M8 13h9M8 17h5" /><path d="M7 2v4M17 2v4" /></svg>;
+export const IconRegister = () => <svg {...b}><path d="M5 3h11l3 3v15H5zM8 8h8M8 12h8M8 16h5" /></svg>;
+export const IconLexikon = () => <svg {...b}><path d="M4 4h16v16H4z" /><path d="M8 16V8l4 5 4-5v8" /></svg>;
+export const IconAktuell = () => <svg {...b}><path d="M12 3l9 4.5-9 4.5-9-4.5z" /><path d="M3 12l9 4.5 9-4.5M3 16.5L12 21l9-4.5" /></svg>;
+export const IconSuche = () => <svg {...b} width="15" height="15"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>;
+export const IconSonne = () => <svg {...b}><circle cx="12" cy="12" r="4" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M19.1 4.9l-1.8 1.8M6.7 17.3l-1.8 1.8" /></svg>;
+export const IconMond = () => <svg {...b}><path d="M20.5 14.8A8.6 8.6 0 0 1 9.2 3.5a9 9 0 1 0 11.3 11.3z" /></svg>;
+export const IconHaken = () => <svg {...b} width="13" height="13" strokeWidth="2.6"><path d="M4.5 12.5 9.5 17.5 19.5 6.5" /></svg>;
+export const IconFlamme = () => <svg {...b}><path d="M12 3c1 3 4 4.5 4 8.5a4 4 0 0 1-8 0c0-1.5.5-2.5 1.2-3.3.3 1.3 1 2 1.8 2.3C11 8 11 5.5 12 3z" /><path d="M8.5 12.5C6 14 5 16 5 17.5A7 7 0 0 0 19 17.5c0-1.5-.5-3-1.5-4.5" /></svg>;
+export const IconBlitz = () => <svg {...b}><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>;
+export const IconStern = () => <svg {...b}><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z" /></svg>;
+export const IconPfeil = () => <svg {...b} width="16" height="16"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
+export const IconZurueck = () => <svg {...b} width="16" height="16"><path d="M19 12H5M11 6l-6 6 6 6" /></svg>;
+export const IconMehr = () => <svg {...b}><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none" /><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" /><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none" /></svg>;
+export const IconLesezeichen = ({ voll }) => <svg {...b} fill={voll ? "currentColor" : "none"}><path d="M6 3h12v18l-6-4-6 4z" /></svg>;
+export const IconNotiz = () => <svg {...b}><path d="M4 4h16v12l-4 4H4z" /><path d="M16 20v-4h4M8 9h8M8 13h5" /></svg>;
+export const IconSchliessen = () => <svg {...b} width="16" height="16"><path d="M6 6l12 12M18 6 6 18" /></svg>;
+export const IconEinstellungen = () => <svg {...b}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg>;
+export const IconAuge = () => <svg {...b}><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>;
+export const IconShuffle = () => <svg {...b}><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5" /></svg>;
+export const IconStart = () => <svg {...b}><path d="M8 5v14l11-7z" /></svg>;
+export const IconPokal = () => <svg {...b}><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 21h6M10 17h4" /></svg>;
