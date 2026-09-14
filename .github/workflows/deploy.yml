@@ -2,7 +2,9 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    # main für den Regelbetrieb, der Entwicklungsbranch ist zugleich der
+    # Standardbranch des Repositorys – ohne ihn liefe der Deploy nie an.
+    branches: [main, claude/affectionate-hopper-a8w07x]
   workflow_dispatch:
 
 permissions:

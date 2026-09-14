@@ -42,8 +42,9 @@ npm run build    # Produktionsbuild nach dist/
 ```
 
 Der Build läuft mit `base: "./"` unter jeder Domain und unter GitHub Pages. Der Workflow in
-`.github/workflows/deploy.yml` deployt bei jedem Push auf `main` (Repository → Settings → Pages
-→ Source „GitHub Actions“).
+`.github/workflows/deploy.yml` deployt bei jedem Push auf den Standardbranch. Damit er greift,
+muss GitHub Pages einmalig eingeschaltet werden: Repository → Settings → Pages → Source
+„GitHub Actions“. Die Seite liegt danach unter `https://ccan-devoloper.github.io/juracampus/`.
 
 ## Projektstruktur
 
